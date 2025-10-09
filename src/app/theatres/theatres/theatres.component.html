@@ -1,0 +1,38 @@
+<div class="theater-list">
+    <h1 class="movie-name">{{ movieName || 'Loading...' }}</h1>
+
+    <div *ngIf="isLoading" class="loading">Loading theaters...</div>
+
+    <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+    <div *ngIf="!isLoading && !errorMessage && theaters.length > 0" class="theaters-grid">
+        <div *ngFor="let theater of theaters" class="theater-card">
+            <h3 class="theatre-name">{{ theater.theatreName }} - {{ theater.location }}</h3>
+            <p class="screenno">Screen: {{ theater.screenNumber }}</p>
+            <button class="booking" [ngStyle]="{'margin-bottom': theaters.length > 0 ? '30px' : '0px'}"
+                (click)="openSeatModal(theater)">Book Now</button>
+        </div>
+    </div>
+
+    <div *ngIf="!isLoading && !errorMessage && theaters.length === 0" class="no-results">
+        No theaters available for this movie.
+    </div>
+
+    <button (click)="backToDetails()" class="back-btn">Back to Movie Details</button>
+</div>
+
+<!-- Seat Selection Modal -->
+ <div class="modal" [class.active]="showModal">
+  <div class="modal-content">
+    <button class="close-btn" (click)="closeModal()">×</button>
+    <h2 class="seats">Seats for {{ selectedTheater?.theatreName || 'Theater' }}</h2>
+    <div class="seat-map">
+      <div *ngFor="let seat of seats" class="seat {{ seat.status }}"
+           (click)="toggleSeat(seat)">
+        {{ seat.label }}
+      </div>
+    </div>
+    <div class="total">Total: ${{ totalAmount }} ({{ selectedSeats.length }} seats selected)</div>
+    <button class="pay-btn" [disabled]="selectedSeats.length === 0" (click)="proceedToPayment()">Pay Now</button>
+  </div>
+</div>

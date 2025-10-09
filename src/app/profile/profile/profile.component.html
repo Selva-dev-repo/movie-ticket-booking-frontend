@@ -1,0 +1,36 @@
+<div class="min-h-screen bg-gray-100 flex flex-col justify-between">
+  <div class="container mx-auto px-4 py-8">
+    <div *ngIf="errorMessage" class="text-red-500 text-center">
+      {{ errorMessage }}
+    </div>
+    <div *ngIf="user; else loading">
+      <h1 class="text-3xl font-bold text-gray-800">
+        Hi {{ user.userName }}
+      </h1>
+      <p class="text-lg text-gray-600 mt-2">
+        User ID: {{ user.userId }}
+      </p>
+      <div class="mt-6 flex space-x-4">
+        <button (click)="editProfile()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+          Edit Profile
+        </button>
+        <button (click)="logout()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
+          Logout
+        </button>
+      </div>
+    </div>
+    <ng-template #loading>
+      <p class="text-lg text-gray-600 text-center">Loading user data...</p>
+    </ng-template>
+  </div>
+  <footer class="bg-gray-800 text-white py-4">
+    <div class="footer">
+      <div class="options">
+        <span class="about">About</span>
+        <span class="contact">Contact</span>
+        <span class="policy">Privacy Policy</span>
+      </div>
+      <p class="text-center">&copy; 2025 Your Company. All rights reserved.</p>
+    </div>
+  </footer>
+</div>

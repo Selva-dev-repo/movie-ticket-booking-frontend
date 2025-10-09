@@ -1,0 +1,28 @@
+/* .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} */
+.login-heading {
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+}
+.login {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+}
+.password {
+    margin-top: 10px;
+}
+.submit {
+    margin-top: 20px;
+}
+.login-message {
+    color:red; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+}

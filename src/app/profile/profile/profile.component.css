@@ -1,0 +1,26 @@
+.profile-container {
+    padding-bottom: 60px;
+}
+
+.profile-heading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.options {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    margin-top: 2px;
+}
+
+.about, .contact, .policy {
+    padding: 10px;
+}

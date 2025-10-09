@@ -1,0 +1,24 @@
+<div class="home-container">
+  <h2 class="home-title">Home</h2>
+  
+  <div *ngIf="loading">Loading movies...</div>
+  <div *ngIf="error">{{ error }}</div>
+
+  <div class="movies-grid" *ngIf="!loading && !error">
+    <div class="movie-card" *ngFor="let movie of movies" (click)="showMovieDetails(movie)">
+      <h3><span class="movie-name">{{ movie.movieTitle }}</span> - {{movie.duration}} mins </h3>
+      <p class="timings">Date & Time - {{ movie.showTime }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- Popup Modal -->
+<div *ngIf="selectedMovie" class="modal">
+  <div class="modal-content">
+    <h3 class="modal-movie-name">{{ selectedMovie.movieTitle }}</h3>
+    <p>{{ selectedMovie.showTime }}</p>
+    <button (click)="bookTicket(selectedMovie)" class="book-ticket">Book Ticket</button>
+    <button (click)="closePopup()" class="close">Close</button>
+  </div>
+</div>
+

@@ -1,0 +1,37 @@
+<div class="booking-container">
+  <h2 style="display: flex; justify-content: center; align-items: center;">My Bookings</h2>
+
+  <!-- Loading state -->
+  <div *ngIf="loading">
+    <p>Loading bookings...</p>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="error && !loading">
+    <p class="error">Error: {{ error }}</p>
+  </div>
+
+  <!-- Bookings list -->
+  <div *ngIf="!loading && !error">
+    <p *ngIf="bookings.length === 0">No bookings found.</p>
+
+    <ul *ngIf="bookings.length > 0" style="list-style: none;">
+      <li *ngFor="let booking of bookings">
+        <div class="all-bookings">
+          <p><strong>Movie :</strong><span class="movie-title"> {{ booking.movieName || 'N/A' }} </span>- {{
+            booking.duration || 'N/A' }} min</p>
+          <p><strong>Show Time :</strong> {{ booking.showTime || 'N/A' }}</p>
+          <p><strong>Theatre :</strong> {{ booking.theatreName || 'N/A' }} - {{ booking.location || 'N/A' }}</p>
+          <p><strong>Screen :</strong> {{ booking.screenNumber || 'N/A' }}</p>
+          <P><strong>Seats :</strong> {{ booking.seatNumber || 'N/A' }}</P>
+          <p><strong>Amount & Booking Status :</strong> <span [ngClass]="{
+          'status-confirmed': booking.bookingStatus === 'Confirmed',
+          'status-pending': booking.bookingStatus === 'Pending',
+          'status-cancelled': booking.bookingStatus === 'Cancelled'
+        }"> ${{ booking.amount || 'N/A' }} - {{ booking.bookingStatus || 'N/A' }}</span></p>
+        </div>
+      </li>
+    </ul>
+
+  </div>
+</div>
