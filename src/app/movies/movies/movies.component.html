@@ -1,15 +1,48 @@
+<!-- Movies list -->
 <div class="movies-container">
   <h2 class="movies-title">Movies</h2>
+  <div class="add-movie-btn">
+    <button *ngIf="isAdmin" class="" (click)="openAddMovieModal()">Add new movie</button>
+  </div>
 
   <div *ngIf="loading" class="loading">Fetching movies, please wait...</div>
 
   <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div *ngIf="!loading && !error && movies.length === 0">
+    <p>No movies found.</p>
+  </div>
 
   <div class="movies-grid" *ngIf="!loading && !error">
     <div class="movie-card" *ngFor="let movie of movies" (click)="showMovieDetails(movie)">
       <h3><span class="movie-name">{{ movie.movieTitle }}</span> - {{movie.duration}} mins </h3>
       <p class="movie-showtime">Date & Time - {{ movie.showTime }}</p>
     </div>
+  </div>
+</div>
+
+<!-- Add movie modal -->
+<div *ngIf="showAddMovieModal" class="add-movie-modal">
+  <div class="modal-content-movie">
+    <h2>Add New Movie</h2>
+    <form (ngSubmit)="addMovie()">
+      <div class="form-group">
+        <label for="movieTitle">Movie Title:</label>
+        <input class="title-area" id="movietitle" [(ngModel)]="newMovie.movieTitle" name="movieTitle" required />
+      </div>
+      <div class="form-group">
+        <label for="duration" class="duration">Duration:</label>
+        <input class="duration-area" id="duration" [(ngModel)]="newMovie.duration" name="duration" required />
+      </div>
+      <div class="form-group">
+        <label for="showTime">Show Time:</label>
+        <input class="show-area" id="showTime" [(ngModel)]="newMovie.showTime" name="showTime" />
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" (click)="closeAddMovieModal()">Cancel</button>
+        <button type="submit" class="add-btn" (click)="addMovie()">Add Movie</button>
+      </div>
+    </form>
   </div>
 </div>
 

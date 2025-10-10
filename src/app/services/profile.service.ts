@@ -6,6 +6,7 @@ export interface User {
   userId: number;
   userName: string;
   password: string;
+  role: 'admin' | 'user';
 }
 
 @Injectable({
@@ -17,7 +18,7 @@ export class ProfileService {
   constructor(private http: HttpClient) {}
 
   getUser(userId: number): Observable<User> {
-    console.log(`Fetching user with ID: ${userId}`);
+    // console.log(`Fetching user with ID: ${userId}`);
     return this.http.get<User>(`${this.apiUrl}/${userId}`).pipe(
       catchError((error: any) => {
         console.error(`Error fetching user with ID ${userId}:`, error);

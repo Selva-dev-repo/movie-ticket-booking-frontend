@@ -15,6 +15,12 @@
   align-items: center;
 }
 
+.add-movie-btn {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
 .movie-name {
   text-transform: uppercase;
   margin-left: 20px;
@@ -24,8 +30,69 @@
   margin-left: 20px
 }
 
+.movie-card {
+  background-color: #f5ebeb;
+  border-radius: 10px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
 .movie-card:hover {
   background-color: aliceblue;
+}
+
+.add-movie-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal-content-movie {
+  background: rgb(235, 230, 230);
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in;
+  /* Optional animation */
+}
+
+.form-group {
+  margin-top: 15px;
+}
+
+.title-area {
+  margin-left: 10px;
+}
+
+.duration-area {
+  margin-left: 30px;
+}
+
+.show-area {
+  margin-left: 10px;
+}
+
+.modal-actions {
+  margin-top: 10px;
+}
+
+.cancel-btn {
+  background-color: #ff0000;
+}
+
+.add-btn {
+  background-color: #0578f4;
 }
 
 .modal {

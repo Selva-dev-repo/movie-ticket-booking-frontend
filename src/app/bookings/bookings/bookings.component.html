@@ -11,9 +11,13 @@
     <p class="error">Error: {{ error }}</p>
   </div>
 
+  <div *ngIf="bookings.length === 0">
+    <p>No bookings found</p>
+  </div>
+
   <!-- Bookings list -->
   <div *ngIf="!loading && !error">
-    <p *ngIf="bookings.length === 0">No bookings found.</p>
+    <!-- <p >No bookings found.</p> -->
 
     <ul *ngIf="bookings.length > 0" style="list-style: none;">
       <li *ngFor="let booking of bookings">

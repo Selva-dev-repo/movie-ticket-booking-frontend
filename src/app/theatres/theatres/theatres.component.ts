@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Theatre, TheatreService } from '../../services/theatre.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Movie, MovieService } from '../../services/movie.service';
-import { catchError, forkJoin, of, Subscription } from 'rxjs';
-import { Booking, BookingService, SaveBooking } from '../../services/booking.service';
+import {  forkJoin } from 'rxjs';
+import { BookingService, SaveBooking } from '../../services/booking.service';
 import { AuthService } from '../../services/auth.service';
 
 interface Seat {

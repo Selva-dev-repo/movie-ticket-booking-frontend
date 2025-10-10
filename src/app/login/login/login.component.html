@@ -11,7 +11,9 @@
         <input type="password" id="password" [(ngModel)]="users.password" name="password" required />
       </div>
       <button class="submit" type="submit">Login</button>
+      <div *ngIf="loginMessage" style="color: red;">
+        {{ loginMessage }}
+      </div>
     </div>
   </form>
-  <p *ngIf="loginMessage" class="login-message">{{ loginMessage }}</p>
 </div>

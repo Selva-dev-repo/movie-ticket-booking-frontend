@@ -5,10 +5,13 @@
     </div>
     <div *ngIf="user; else loading">
       <h1 class="text-3xl font-bold text-gray-800">
-        Hi {{ user.userName }}
+        Hi {{ user.userName }}!
       </h1>
       <p class="text-lg text-gray-600 mt-2">
         User ID: {{ user.userId }}
+      </p>
+      <p class="text-lg text-gray-600 mt-2">
+        Role: {{ user.role }}
       </p>
       <div class="mt-6 flex space-x-4">
         <button (click)="editProfile()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">

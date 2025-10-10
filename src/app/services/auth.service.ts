@@ -4,13 +4,9 @@ import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { User } from './profile.service';
 
-export interface LoginRequest {
-  userName: string;
-  password: string;
-}
-
-export interface LoginResponse {
-  token: string;
+interface LoginResponse {
+  message: string;
+  user?: User;
 }
 
 @Injectable({
@@ -22,119 +18,63 @@ export class AuthService {
 
   login(users: { userName: string; password: string }): Observable<string> {
     return this.http
-      .post(`${this.apiUrl}/login`, users, { responseType: 'text' })
+      .post<LoginResponse>(`${this.apiUrl}/login`, { userName: users.userName, password: users.password })
       .pipe(
-        tap((token) => {
-          // console.log('Login response (token):', token);
-          localStorage.setItem('token', token);
-          this.getUserProfile().subscribe({
-            next: (profile: any) => {
-              // console.log('User profile response:', profile);
-              const user = Array.isArray(profile) ? profile[0] : profile;
-              if (user?.userId) {
-                // console.log("user gets id with id", user.userId);
-
-                localStorage.setItem('userId', user.userId.toString());
-              } else {
-                console.error('No userId found in user profile:', profile);
-              }
-            },
-            error: (err) => console.error('Error fetching user profile:', err),
-          });
+        tap((response) => {
+          if (response.message === 'Login successful' && response.user) {
+            const mockToken = `mock-token-${response.user.userId}`;
+            localStorage.setItem('token', mockToken);
+            localStorage.setItem('userId', response.user.userId.toString());
+            localStorage.setItem('userName', response.user.userName);
+            localStorage.setItem('role', response.user.role || 'user');
+          } else {
+            throw new Error(response.message || 'Login failed');
+          }
+        }),
+        map((response) => response.message),
+        catchError((error) => {
+          console.error('Login error:', error);
+          return throwError(() => new Error(error.error?.message || 'Server error occurred'));
         })
       );
   }
 
   getUserProfile(userId?: number): Observable<User> {
-    const id = userId || localStorage.getItem('token');
+    const id = userId || localStorage.getItem('token')?.replace('mock-token-', '');
     if (!id) {
       console.error('No userId or token found');
       return throwError(() => new Error('User not authenticated'));
     }
     return this.http
-      .get<User>(`${this.apiUrl}/users/${id}`, {
-        headers: new HttpHeaders({
-          Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
-        }),
-      })
+      .get<User>(`${this.apiUrl}/users/${id}`)
       .pipe(
         tap((profile) => {
-          // console.log('User profile response:', profile);
           if (profile?.userId && profile?.userName) {
             localStorage.setItem('userId', String(profile.userId));
             localStorage.setItem('userName', profile.userName);
-            // localStorage.setItem('role', profile.role);
+            localStorage.setItem('role', profile.role || 'user');
           } else {
             console.error('Invalid user profile data:', profile);
           }
         }),
-        catchError((error: any) => {
+        catchError((error) => {
           console.error(`Error fetching user profile for ID ${id}:`, error);
-          let errorMessage = 'Failed to fetch user profile';
-          if (error.status === 404) {
-            errorMessage = `User not found for ID: ${id}`;
-          } else if (error.status === 500) {
-            errorMessage = `Server error: ${
-              error.error || 'Unknown server issue'
-            }`;
-          } else if (error.status === 0) {
-            errorMessage =
-              'Network error: Unable to reach the server. Check CORS configuration.';
-          }
-          return throwError(() => new Error(errorMessage));
+          return throwError(() => new Error('Failed to fetch user profile'));
         })
       );
   }
 
-  getUserByUsername(userName: string): Observable<User> {
-    return this.http.get<User[]>(`${this.apiUrl}/users`).pipe(
-      map((users) => {
-        const user = users.find((u) => u.userName === userName);
-        if (!user) {
-          throw new Error(`User not found for username: ${userName}`);
-        }
-        return user;
-      }),
-      tap((user) => {
-        // console.log('User found by username:', user);
-        if (user?.userId && user?.userName) {
-          localStorage.setItem('userId', String(user.userId));
-          localStorage.setItem('userName', user.userName);
-          // localStorage.setItem('role', user.role);
-        }
-      }),
-      catchError((error: any) => {
-        console.error(`Error fetching user by username ${userName}:`, error);
-        let errorMessage = `Failed to fetch user for username: ${userName}`;
-        if (error.status === 500) {
-          errorMessage = `Server error: ${
-            error.error || 'Unknown server issue'
-          }`;
-        } else if (error.status === 0) {
-          errorMessage =
-            'Network error: Unable to reach the server. Check CORS configuration.';
-        }
-        return throwError(() => new Error(errorMessage));
-      })
-    );
-  }
-
   getUserId(): number | null {
     const userId = localStorage.getItem('userId');
-    // console.log('AuthService - Retrieved userId from localStorage:', userId);
     return userId ? Number(userId) : null;
   }
 
   getUserName(): string | null {
-    const userName = localStorage.getItem('userName');
-    // console.log('AuthService - Retrieved userName from localStorage:', userName);
-    return userName;
+    return localStorage.getItem('userName');
   }
 
   getRole(): 'admin' | 'user' | null {
-    const role = localStorage.getItem('role');
-    console.log('AuthService - Retrieved role from localStorage:', role);
-    return role as 'admin' | 'user' | null;
+    return localStorage.getItem('role') as 'admin' | 'user' | null;
   }
 
   isLoggedIn(): boolean {
@@ -143,6 +83,9 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('role');
     this.router.navigate(['']);
   }
 }

@@ -34,11 +34,10 @@ export class ProfileComponent implements OnInit {
       )
       .subscribe({
         next: ({ userId, userName }) => {
-          console.log('Retrieved from query params:', { userId, userName });
           const parsedUserId = userId
             ? Number(userId)
             : this.authService.getUserId();
-          console.log('Using userId:', parsedUserId);
+          // console.log('Using userId:', parsedUserId);
           this.loadUser(parsedUserId, userName);
         },
         error: (err) => {
