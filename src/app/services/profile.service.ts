@@ -13,13 +13,13 @@ export interface User {
   providedIn: 'root',
 })
 export class ProfileService {
-  private apiUrl = 'http://localhost:8080/api/users';
+  private apiUrl = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient) {}
 
   getUser(userId: number): Observable<User> {
     // console.log(`Fetching user with ID: ${userId}`);
-    return this.http.get<User>(`${this.apiUrl}/${userId}`).pipe(
+    return this.http.get<User>(`${this.apiUrl}/users/${userId}`).pipe(
       catchError((error: any) => {
         console.error(`Error fetching user with ID ${userId}:`, error);
         let errorMessage = 'Failed to fetch user data';

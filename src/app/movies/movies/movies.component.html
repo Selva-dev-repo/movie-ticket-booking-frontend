@@ -1,8 +1,8 @@
 <!-- Movies list -->
-<div class="movies-container">
-  <h2 class="movies-title">Movies</h2>
+<div class="released-movies">
+  <h2 class="section-title">Released Movies</h2>
   <div class="add-movie-btn">
-    <button *ngIf="isAdmin" class="" (click)="openAddMovieModal()">Add new movie</button>
+    <button *ngIf="isAdmin" class="add-btn" (click)="openAddMovieModal()">Add new movie</button>
   </div>
 
   <div *ngIf="loading" class="loading">Fetching movies, please wait...</div>
@@ -15,8 +15,10 @@
 
   <div class="movies-grid" *ngIf="!loading && !error">
     <div class="movie-card" *ngFor="let movie of movies" (click)="showMovieDetails(movie)">
-      <h3><span class="movie-name">{{ movie.movieTitle }}</span> - {{movie.duration}} mins </h3>
-      <p class="movie-showtime">Date & Time - {{ movie.showTime }}</p>
+      <img src="../../../assets/images/CinemaTicketPoster.jpg" alt="{{ movie.movieTitle }} Poster" width="20px" height="20px" class="movie-poster"/>
+      <div class="movie-title">{{ movie.movieTitle }} - {{movie.duration}}</div>
+      <div class="movie-genre">{{ movie.genre }}</div>
+      <div class="movie-date">{{ movie.releaseDate | date: 'YYYY-MM-d' }}</div>
     </div>
   </div>
 </div>
@@ -35,8 +37,8 @@
         <input class="duration-area" id="duration" [(ngModel)]="newMovie.duration" name="duration" required />
       </div>
       <div class="form-group">
-        <label for="showTime">Show Time:</label>
-        <input class="show-area" id="showTime" [(ngModel)]="newMovie.showTime" name="showTime" />
+        <label for="genre">Genre:</label>
+        <input class="show-area" id="genre" [(ngModel)]="newMovie.genre" name="genre" />
       </div>
       <div class="modal-actions">
         <button type="button" class="cancel-btn" (click)="closeAddMovieModal()">Cancel</button>
@@ -50,7 +52,7 @@
 <div *ngIf="selectedMovie" class="modal">
   <div class="modal-content">
     <h3 class="modal-title">{{ selectedMovie.movieTitle }}</h3>
-    <p class="modal-showtime"> Showtime: {{ selectedMovie.showTime }}</p>
+    <p class="modal-genre"> Genre: {{ selectedMovie.genre }}</p>
     <button (click)="bookTicket(selectedMovie)" class="book-ticket">Book Ticket</button>
     <button (click)="closePopup()" class="close">Close</button>
   </div>

@@ -183,9 +183,15 @@
 <!-- <button (click)="logout()">Logout</button> -->
 
 <!-- Bottom Tabs -->
-<nav *ngIf="loggedIn" class="bottom-tabs">
-  <a routerLink="/home" routerLinkActive="active">Home</a>
-  <a routerLink="/movies" routerLinkActive="active">Movies</a>
-  <a routerLink="/bookings" routerLinkActive="active">Bookings</a>
-  <a routerLink="/profile" routerLinkActive="active">Profile</a>
+<nav class="navbar">
+  <div class="navbar-brand">
+    <a routerLink="/home" class="brand-logo">Movie Booking</a>
+  </div>
+
+  <div *ngIf="loggedIn" class="navbar-menu" [class.open]="isMenuOpen">
+    <a routerLink="/home" routerLinkActive="active">Home</a>
+    <a routerLink="/movies" routerLinkActive="active">Movies</a>
+    <a routerLink="/bookings" routerLinkActive="active">Bookings</a>
+    <a routerLink="/profile" routerLinkActive="active">Profile</a>
+  </div>
 </nav>

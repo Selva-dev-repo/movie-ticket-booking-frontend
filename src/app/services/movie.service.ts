@@ -6,13 +6,19 @@ export interface Movie {
   movieId: number;
   movieTitle: string;
   duration: string;
-  showTime: string;
+  genre: string;
+  posterUrl: string;
+  releaseDate: string;
+  movieStatus: string;
 }
 
 export interface AddMovie {
   movieTitle: string;
   duration: number;
-  showTime: string;
+  genre: string;
+  posterUrl: string;
+  releaseDate: string;
+  movieStatus: string;
 }
 
 @Injectable({ providedIn: 'root' })

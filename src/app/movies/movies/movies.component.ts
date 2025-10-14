@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
+import { HomeService, UpcomingMovies } from '../../services/home.service';
 
 @Component({
   selector: 'app-movies',
@@ -15,15 +16,16 @@ import { FormsModule } from '@angular/forms';
 })
 export class MoviesComponent implements OnInit {
   movies: Movie[] = [];
+  upcoming: UpcomingMovies[] = [];
   loading: boolean = true;
   selectedMovie: Movie | null = null;
   userName: string = '';
   isAdmin: boolean = false;
   showAddMovieModal: boolean = false;
-  newMovie: AddMovie = { movieTitle: '', duration: 0, showTime: '' };
+  newMovie: AddMovie = { movieTitle: '', duration: 0, genre: '', posterUrl: '', releaseDate: '', movieStatus: '' };
   error = '';
 
-  constructor(private movieService: MovieService, private authService: AuthService, private router: Router) {}
+  constructor(private movieService: MovieService, private homeService: HomeService, private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     const userName = this.authService.getUserName();
@@ -31,31 +33,47 @@ export class MoviesComponent implements OnInit {
     if (userName && this.authService.isLoggedIn()) {
       this.userName = userName;
       this.isAdmin = role === 'admin';
-      this.fetchMovies();
+      this.releasedMovies();
     } else {
       this.authService.logout();
     }
   }
 
-  private fetchMovies(): void {
-    this.movies = [];
+  // private fetchMovies(): void {
+  //   this.movies = [];
+  //   this.loading = true;
+  //   this.movieService.getMovies().subscribe({
+  //     next: (movies: Movie[]) => {
+  //       // console.log('Successfully fetched movies:', movies);
+  //       this.movies = movies;
+  //       this.loading = false;
+  //     },
+  //     error: (error: any) => {
+  //       console.error('Error fetching movies:', error);
+  //       this.error = 'Unable to load movies. Please try again later.';
+  //       this.loading = false;
+  //     },
+  //   });
+  // }
+
+  private releasedMovies(): void {
     this.loading = true;
-    this.movieService.getMovies().subscribe({
+    this.error = '';
+    this.homeService.getReleasedMovies().subscribe({
       next: (movies: Movie[]) => {
-        // console.log('Successfully fetched movies:', movies);
         this.movies = movies;
         this.loading = false;
       },
       error: (error: any) => {
-        console.error('Error fetching movies:', error);
-        this.error = 'Unable to load movies. Please try again later.';
+        console.error('Error fetching released movies:', error);
+        this.error = 'Failed to load released movies. Please try again.';
         this.loading = false;
-      },
+      }
     });
   }
 
   openAddMovieModal() {
-    this.newMovie = { movieTitle: '', duration: 0, showTime: '' };
+    this.newMovie = { movieTitle: '', duration: 0, genre: '', posterUrl: '', releaseDate: '', movieStatus: '' };
     this.showAddMovieModal = true;
   }
 
@@ -64,17 +82,17 @@ export class MoviesComponent implements OnInit {
   }
 
   addMovie() {
-    console.log('Submitting movie:', this.newMovie); // Debug log
+    console.log('Submitting movie:', this.newMovie);
     this.error = '';
-    if (!this.newMovie.movieTitle || !this.newMovie.duration || !this.newMovie.showTime) {
+    if (!this.newMovie.movieTitle || !this.newMovie.duration || !this.newMovie.genre) {
       this.error = 'All fields are required';
       return;
     }
     this.movieService.addMovie(this.newMovie).subscribe({
       next: (savedMovie) => {
-        console.log('Movie added:', savedMovie); // Debug log
+        // console.log('Movie added:', savedMovie);
         this.closeAddMovieModal();
-        this.fetchMovies(); // Refresh movie list
+        this.releasedMovies();
       },
       error: (error) => {
         console.error('Error adding movie:', error);

@@ -36,7 +36,7 @@ export interface Booking {
     screenNumber: string;
     id: number;
   };
-  user?: { userId: number; userName: string; };
+  user?: { userId: number; userName: string };
 }
 
 export interface SaveBooking {
@@ -61,7 +61,10 @@ export interface DisplayBooking extends Booking {
   providedIn: 'root',
 })
 export class BookingService {
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+  ) {}
 
   private apiUrl = 'http://localhost:8080/api/bookings';
   private movieUrl = 'http://localhost:8080/api/movies';
@@ -69,12 +72,6 @@ export class BookingService {
 
   private bookingsSubject = new BehaviorSubject<Booking[]>([]);
   bookings$ = this.bookingsSubject.asObservable();
-
-  // getBookings(): Observable<Booking[]> {
-  //   return this.http
-  //     .get<Booking[]>(`${this.apiUrl}`)
-  //     .pipe(catchError(this.handleError));
-  // }
 
   getBookings(): Observable<Booking[]> {
     const userId = this.authService.getUserId();
@@ -138,7 +135,7 @@ export class BookingService {
       Authorization: `Bearer ${token}`,
     });
     const url = `${this.apiUrl}/theatre/${theatreId}`;
-    console.log('Fetching bookings theatres from:', url);
+    // console.log('Fetching bookings theatres from:', url);
     return this.http.get<Booking[]>(url, { headers }).pipe(
       tap((bookings) => {
         // console.log('Fetched bookings:', bookings);
@@ -182,50 +179,59 @@ export class BookingService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
-    return this.http.get<Booking[]>(`${this.apiUrl}/user/${userId}`, { headers }).pipe(
-      switchMap((bookings) =>
-        forkJoin(
-          bookings
-            .filter((booking) => {
-              const isValid =
-                booking.theatre?.theatreId != null && booking.movie != null;
-              if (!isValid) {
-                console.warn('Skipping booking due to invalid data:', booking);
-              }
-              return isValid;
-            })
-            .map((booking) => {
-              return forkJoin({
-                theatre: booking.theatre?.theatreId
-                  ? this.getTheatre(booking.theatre.theatreId).pipe(
-                      catchError(() => {
-                        console.warn(
-                          `Failed to fetch theatre for ID ${booking.theatre?.theatreId}, using fallback`
-                        );
-                        return of({
-                          theatreName: 'N/A',
-                          screenNumber: 'N/A',
-                          location: 'N/A',
-                        });
-                      })
-                    )
-                  : of({ theatreName: 'N/A', screenNumber: 'N/A', location: 'N/A' }),
-              }).pipe(
-                map(({ theatre }) => ({
-                  ...booking,
-                  movieName: booking.movie?.movieTitle || 'N/A',
-                  duration: booking.movie?.duration || 0,
-                  showTime: booking.movie?.showTime || 'N/A',
-                  theatreName: theatre.theatreName || 'N/A',
-                  location: theatre.location || 'N/A',
-                  screenNumber: theatre.screenNumber || 'N/A',
-                }))
-              );
-            })
-        )
-      ),
-      catchError(this.handleError)
-    );
+    return this.http
+      .get<Booking[]>(`${this.apiUrl}/user/${userId}`, { headers })
+      .pipe(
+        switchMap((bookings) =>
+          forkJoin(
+            bookings
+              .filter((booking) => {
+                const isValid =
+                  booking.theatre?.theatreId != null && booking.movie != null;
+                if (!isValid) {
+                  console.warn(
+                    'Skipping booking due to invalid data:',
+                    booking
+                  );
+                }
+                return isValid;
+              })
+              .map((booking) => {
+                return forkJoin({
+                  theatre: booking.theatre?.theatreId
+                    ? this.getTheatre(booking.theatre.theatreId).pipe(
+                        catchError(() => {
+                          console.warn(
+                            `Failed to fetch theatre for ID ${booking.theatre?.theatreId}, using fallback`
+                          );
+                          return of({
+                            theatreName: 'N/A',
+                            screenNumber: 'N/A',
+                            location: 'N/A',
+                          });
+                        })
+                      )
+                    : of({
+                        theatreName: 'N/A',
+                        screenNumber: 'N/A',
+                        location: 'N/A',
+                      }),
+                }).pipe(
+                  map(({ theatre }) => ({
+                    ...booking,
+                    movieName: booking.movie?.movieTitle || 'N/A',
+                    duration: booking.movie?.duration || 0,
+                    showTime: booking.movie?.showTime || 'N/A',
+                    theatreName: theatre.theatreName || 'N/A',
+                    location: theatre.location || 'N/A',
+                    screenNumber: theatre.screenNumber || 'N/A',
+                  }))
+                );
+              })
+          )
+        ),
+        catchError(this.handleError)
+      );
   }
 
   private getMovie(movieId: number): Observable<any> {

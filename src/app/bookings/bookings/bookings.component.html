@@ -1,17 +1,17 @@
 <div class="booking-container">
-  <h2 style="display: flex; justify-content: center; align-items: center;">My Bookings</h2>
+  <h2 class="bookings-title">My Bookings</h2>
 
   <!-- Loading state -->
-  <div *ngIf="loading">
+  <!-- <div *ngIf="loading">
     <p>Loading bookings...</p>
-  </div>
+  </div> -->
 
   <!-- Error state -->
   <div *ngIf="error && !loading">
     <p class="error">Error: {{ error }}</p>
   </div>
 
-  <div *ngIf="bookings.length === 0">
+  <div *ngIf="bookings.length === 0 && loading">
     <p>No bookings found</p>
   </div>
 

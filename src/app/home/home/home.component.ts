@@ -3,6 +3,7 @@ import { Movie, MovieService } from '../../services/movie.service';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { HomeService, UpcomingMovies } from '../../services/home.service';
 
 @Component({
   selector: 'app-home',
@@ -12,39 +13,37 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-  movies: Movie[] = [];
+  movies: UpcomingMovies[] = [];
   loading = true;
-  selectedMovie: Movie | null = null;
   error = '';
 
-  constructor(private movieService: MovieService, private router: Router) {}
+  constructor(private homeService: HomeService, private router: Router) {}
 
   ngOnInit() {
-    this.movieService.getMovies().subscribe({
-      next: (data) => {
-        // console.log('Movies loaded:', data);
-        this.movies = data;
-        this.loading = false;
+    this.upcomingMovies();
+    // this.releasedMovies();
+  }
+
+  upcomingMovies() {
+    this.homeService.getUpcomingMovies().subscribe({
+      next: (movies) => {
+        this.movies = movies;
+        // console.log(movies);
       },
       error: (err) => {
-        console.error('Movie API error:', err);
-        this.error = 'Failed to load movies';
-        this.loading = false;
+        console.error('Error fetching movies:', err);
       },
     });
   }
 
-  showMovieDetails(movie: Movie) {
-    this.selectedMovie = movie;
-  }
-
-  closePopup() {
-    this.selectedMovie = null;
-  }
-
-  bookTicket(movie: Movie): void {
-    this.selectedMovie = null;
-    console.log(`Movies: ${movie.movieId}`);
-    this.router.navigate(['/theatres'], { queryParams: { movieId: movie.movieId, movieName: movie.movieTitle } });
+  releasedMovies() {
+    this.homeService.getReleasedMovies().subscribe({
+      next: (movies) => {
+        this.movies = movies;
+      },
+      error: (err) => {
+        console.error('Error fetching released movies:', err);
+      },
+    });
   }
 }

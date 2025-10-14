@@ -1,24 +1,12 @@
-<div class="home-container">
-  <h2 class="home-title">Home</h2>
-  
-  <div *ngIf="loading">Loading movies...</div>
-  <div *ngIf="error">{{ error }}</div>
-
-  <div class="movies-grid" *ngIf="!loading && !error">
-    <div class="movie-card" *ngFor="let movie of movies" (click)="showMovieDetails(movie)">
-      <h3><span class="movie-name">{{ movie.movieTitle }}</span> - {{movie.duration}} mins </h3>
-      <p class="timings">Date & Time - {{ movie.showTime }}</p>
+<section class="upcoming-movies">
+  <h2 class="section-title">Upcoming Movies</h2>
+  <div class="movies-grid">
+    <div class="movie-card" *ngFor="let movie of movies">
+      <!-- <img [src]="movie.posterUrl" alt="{{ movie.movieTitle }} Poster" width="20%" class="movie-poster"> -->
+      <img src="../../../assets/images/CinemaTicketPoster.jpg" alt="{{ movie.movieTitle }} Poster" width="50px" height="50px" class="movie-poster"/>
+      <div class="movie-title">{{ movie.movieTitle }} - {{movie.duration}}</div>
+      <div class="movie-genre">{{ movie.genre }}</div>
+      <div class="movie-date">{{ movie.releaseDate | date: 'YYYY-MM-d' }}</div>
     </div>
   </div>
-</div>
-
-<!-- Popup Modal -->
-<div *ngIf="selectedMovie" class="modal">
-  <div class="modal-content">
-    <h3 class="modal-movie-name">{{ selectedMovie.movieTitle }}</h3>
-    <p>{{ selectedMovie.showTime }}</p>
-    <button (click)="bookTicket(selectedMovie)" class="book-ticket">Book Ticket</button>
-    <button (click)="closePopup()" class="close">Close</button>
-  </div>
-</div>
-
+</section>

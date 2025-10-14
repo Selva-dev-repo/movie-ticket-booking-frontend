@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
-import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -19,25 +19,31 @@ export class LoginComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   onLogin() {
-    this.loginMessage = null; // Reset error message
-    this.authService.login({ userName: this.users.userName, password: this.users.password })
-      .subscribe({
-        next: (message) => {
-          if (message === 'Login successful') {
-            const role = this.authService.getRole();
-            if (role === 'admin') {
-              this.router.navigate(['/home']);
-            } else {
-              this.router.navigate(['/home']);
-            }
+    this.loginMessage = null;
+    const loginData = {
+      userName: this.users.userName,
+      password: this.users.password,
+    };
+    this.authService.login(loginData).subscribe({
+      next: (response) => {
+        this.loginMessage = response;
+        if (response === 'Login successful') {
+          const username =
+            this.authService.getUserName() || this.users.userName;
+          const role = this.authService.getRole();
+          if (role === 'admin') {
+            this.router.navigate(['/movies']);
           } else {
-            this.loginMessage = message;
+            this.router.navigate(['/home']);
           }
-        },
-        error: (error) => {
-          console.error('Login error:', error);
-          this.loginMessage = error.message || 'An error occurred during login. Please try again.';
+        } else {
+          this.loginMessage = response;
         }
-      });
+      },
+      error: (err) => {
+        console.error('Unexpected login error:', err);
+        this.loginMessage = 'Unexpected error occurred';
+      },
+    });
   }
 }

@@ -1,5 +1,14 @@
 .booking-container {
-    padding-bottom: 60px;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.bookings-title {
+    display: flex; 
+    justify-content: flex-start; 
+    align-items: center;
+    margin-top: 80px;
 }
 
 .all-bookings {

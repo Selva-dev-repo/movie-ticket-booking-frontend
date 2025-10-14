@@ -41,14 +41,15 @@ export class TheatresComponent implements OnInit {
     private movieService: MovieService,
     private authService: AuthService,
     private theaterService: TheatreService,
-    private bookingService: BookingService,
-    //  private userIdSubscription: Subscription
-  ) {  }
+    private bookingService: BookingService
+  ) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.movieId = params['movieId'] ? Number(params['movieId']) : null;
-      this.movieName = params['movieName'] ? String(params['movieName']) : 'Unknown Movie';
+      this.movieName = params['movieName']
+        ? String(params['movieName'])
+        : 'Unknown Movie';
       if (this.movieId !== null) {
         this.fetchTheatres(this.movieId, this.movieName);
         this.fetchMovieDetails(this.movieId, this.movieName);
@@ -111,36 +112,47 @@ export class TheatresComponent implements OnInit {
     const cols = 4;
     this.seats = [];
     if (this.movieId && this.selectedTheater?.theatreId) {
-      this.bookingService.refreshBookings(this.userId!, this.movieId, this.selectedTheater.theatreId).subscribe({
-        next: (bookings) => {
-          const bookedSeats = bookings.map(booking => booking.seatNumber);
-          for (let row = 0; row < rows; row++) {
-            for (let col = 0; col < cols; col++) {
-              const id = row * cols + col;
-              const label = String.fromCharCode(65 + row) + (col + 1);
-              this.seats.push({
-                id,
-                label,
-                status: bookedSeats.includes(label) || [2, 7, 12, 18].includes(id) ? 'unavailable' : 'available'
-              });
+      this.bookingService
+        .refreshBookings(
+          this.userId!,
+          this.movieId,
+          this.selectedTheater.theatreId
+        )
+        .subscribe({
+          next: (bookings) => {
+            const bookedSeats = bookings.map((booking) => booking.seatNumber);
+            for (let row = 0; row < rows; row++) {
+              for (let col = 0; col < cols; col++) {
+                const id = row * cols + col;
+                const label = String.fromCharCode(65 + row) + (col + 1);
+                this.seats.push({
+                  id,
+                  label,
+                  status:
+                    bookedSeats.includes(label) || [2, 7, 12, 18].includes(id)
+                      ? 'unavailable'
+                      : 'available',
+                });
+              }
             }
-          }
-        },
-        error: (error) => {
-          console.error('Error fetching bookings for seat map:', error);
-          for (let row = 0; row < rows; row++) {
-            for (let col = 0; col < cols; col++) {
-              const id = row * cols + col;
-              const label = String.fromCharCode(65 + row) + (col + 1);
-              this.seats.push({
-                id,
-                label,
-                status: [2, 7, 12, 18].includes(id) ? 'unavailable' : 'available'
-              });
+          },
+          error: (error) => {
+            console.error('Error fetching bookings for seat map:', error);
+            for (let row = 0; row < rows; row++) {
+              for (let col = 0; col < cols; col++) {
+                const id = row * cols + col;
+                const label = String.fromCharCode(65 + row) + (col + 1);
+                this.seats.push({
+                  id,
+                  label,
+                  status: [2, 7, 12, 18].includes(id)
+                    ? 'unavailable'
+                    : 'available',
+                });
+              }
             }
-          }
-        }
-      });
+          },
+        });
     }
   }
 
@@ -155,15 +167,20 @@ export class TheatresComponent implements OnInit {
   }
 
   proceedToPayment() {
-    if (this.selectedSeats.length > 0 && this.selectedTheater && this.movieId && this.userId !== null) {
-      const requests = this.selectedSeats.map(seat => {
+    if (
+      this.selectedSeats.length > 0 &&
+      this.selectedTheater &&
+      this.movieId &&
+      this.userId !== null
+    ) {
+      const requests = this.selectedSeats.map((seat) => {
         const booking: SaveBooking = {
           bookingStatus: 'Confirmed',
           seatNumber: seat.label,
           amount: this.pricePerSeat,
           userId: this.userId!,
           movieId: this.movieId!,
-          theatreId: this.selectedTheater!.theatreId
+          theatreId: this.selectedTheater!.theatreId,
         };
         // console.log('Creating booking with payload:', booking);
         return this.bookingService.saveBooking(booking);
@@ -172,31 +189,82 @@ export class TheatresComponent implements OnInit {
       forkJoin(requests).subscribe({
         next: (savedBookings) => {
           // console.log('Saved bookings:', savedBookings);
-          if (this.movieId && this.selectedTheater?.theatreId) {
-            this.bookingService.refreshBookings(this.userId!, this.movieId, this.selectedTheater.theatreId).subscribe({
-              next: () => {
-                alert(`Payment successful for ${this.selectedSeats.length} seats at $${this.totalAmount}.\n\nSeats: ${this.selectedSeats.map(s => s.label).join(', ')}\nMovie: ${this.movieName}\nTheater: ${this.selectedTheater?.theatreName}`);
-                this.closeModal();
-              },
-              error: (error) => {
-                console.error('Error refreshing bookings:', error);
-                alert(`Payment successful, but failed to refresh bookings: ${error.error?.message || 'Please try again.'}`);
-                this.closeModal();
-              }
+          if (this.userId && this.movieId && this.selectedTheater?.theatreId) {
+            // console.log('Refreshing bookings with:', {
+            //   userId: this.userId,
+            //   movieId: this.movieId,
+            //   theatreId: this.selectedTheater.theatreId,
+            // });
+            this.bookingService
+              .refreshBookings(
+                this.userId,
+                this.movieId,
+                this.selectedTheater.theatreId
+              )
+              .subscribe({
+                next: () => {
+                  alert(
+                    `Payment successful for ${
+                      this.selectedSeats.length
+                    } seats at $${
+                      this.totalAmount
+                    }.\n\nSeats: ${this.selectedSeats
+                      .map((s) => s.label)
+                      .join(', ')}\nMovie: ${this.movieName}\nTheater: ${
+                      this.selectedTheater?.theatreName
+                    }`
+                  );
+                  this.closeModal();
+                },
+                error: (error) => {
+                  console.error('Error refreshing bookings:', {
+                    status: error.status,
+                    message: error.error?.message || error.message,
+                    details: error.error,
+                  });
+                  alert(
+                    `Payment successful, but failed to refresh bookings: ${
+                      error.error?.message || 'Please try again.'
+                    }`
+                  );
+                  this.closeModal();
+                },
+              });
+          } else {
+            console.error('Invalid parameters for refreshBookings:', {
+              userId: this.userId,
+              movieId: this.movieId,
+              theatreId: this.selectedTheater?.theatreId,
             });
+            alert(
+              'Payment successful, but unable to refresh bookings due to invalid parameters.'
+            );
+            this.closeModal();
           }
         },
         error: (err) => {
           console.error('Error saving bookings:', {
             status: err.status,
             message: err.error?.message || err.message,
-            details: err.error
+            details: err.error,
           });
-          alert(`Failed to save booking: ${err.error?.message || 'Please try again.'}`);
-        }
+          alert(
+            `Failed to save booking: ${
+              err.error?.message || 'Please try again.'
+            }`
+          );
+        },
       });
     } else {
-      alert('Please select seats, a theater, a movie, and ensure you are logged in.');
+      console.warn('Invalid booking data:', {
+        seats: this.selectedSeats,
+        theater: this.selectedTheater,
+        movieId: this.movieId,
+        userId: this.userId,
+      });
+      alert(
+        'Please select seats, a theater, a movie, and ensure you are logged in.'
+      );
     }
   }
 

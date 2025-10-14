@@ -1,11 +1,22 @@
 .profile-container {
-    padding-bottom: 60px;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
 }
 
 .profile-heading {
+  text-align: flex-start;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  margin-top: 80px;
+  color: #333;
+}
+
+.profile-buttons {
+    /* mt-6 flex space-x-4 */
     display: flex;
-    justify-content: center;
-    align-items: center;
+    margin-top: 6px;
+    gap: 10px;
 }
 
 .footer {

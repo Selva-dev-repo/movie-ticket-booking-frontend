@@ -17,6 +17,7 @@ import { TheatreService } from './services/theatre.service';
 export class AppComponent implements OnInit {
   title = "ticket-booking-app"
   loggedIn = false;
+  isMenuOpen = false;
 
   constructor(private router: Router) {}
 
@@ -27,12 +28,16 @@ export class AppComponent implements OnInit {
 
     this.router.events.subscribe(() => {
       const url = this.router.url;
-      if (url === '/' || url === '/login') {
+      if (url === '/' || url === ' ') {
         this.loggedIn = false;
       } else if (typeof window !== 'undefined') {
         this.loggedIn = !!localStorage.getItem('token');
       }
     });
+  }
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
   }
 
   logout() {
