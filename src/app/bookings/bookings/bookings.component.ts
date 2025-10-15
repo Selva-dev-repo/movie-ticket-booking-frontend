@@ -56,7 +56,7 @@ export class BookingsComponent implements OnInit {
   }
 
   logout(): void {
-    this.bookings = []; // Clear bookings
+    this.bookings = [];
     this.authService.logout();
     this.router.navigate(['']);
   }

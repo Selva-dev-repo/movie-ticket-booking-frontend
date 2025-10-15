@@ -3,7 +3,7 @@ import {
   HttpErrorResponse,
   HttpHeaders,
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import {
   BehaviorSubject,
   catchError,
@@ -16,25 +16,26 @@ import {
   throwError,
 } from 'rxjs';
 import { AuthService } from './auth.service';
+import { isPlatformBrowser } from '@angular/common';
 
 export interface Booking {
   bookingId: number;
   bookingStatus: string;
   seatNumber: string;
+  showDate: string;
+  showTime: string;
   amount: number;
   movie?: {
     movieId: number;
     movieTitle: string;
     duration: number;
-    showTime: string;
-    id: number;
+    genre: string;
   };
   theatre?: {
     theatreId: number;
     theatreName: string;
     location: string;
     screenNumber: string;
-    id: number;
   };
   user?: { userId: number; userName: string };
 }
@@ -42,6 +43,8 @@ export interface Booking {
 export interface SaveBooking {
   bookingStatus: string;
   seatNumber: string;
+  showDate: string;
+  showTime: string;
   amount: number;
   userId: number;
   movieId: number;
@@ -54,6 +57,7 @@ export interface DisplayBooking extends Booking {
   location: string;
   duration: number;
   screenNumber: string;
+  showDate: string;
   showTime: string;
 }
 
@@ -64,6 +68,7 @@ export class BookingService {
   constructor(
     private http: HttpClient,
     private authService: AuthService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   private apiUrl = 'http://localhost:8080/api/bookings';
@@ -75,6 +80,11 @@ export class BookingService {
 
   getBookings(): Observable<Booking[]> {
     const userId = this.authService.getUserId();
+    if (!isPlatformBrowser(this.platformId) || !userId) {
+      return throwError(
+        () => new Error('User not authenticated or not in browser environment')
+      );
+    }
     const token = localStorage.getItem('token');
     if (!userId || !token) {
       return throwError(() => new Error('User not authenticated'));
@@ -91,6 +101,11 @@ export class BookingService {
   }
 
   saveBooking(booking: SaveBooking): Observable<Booking> {
+    if (!isPlatformBrowser(this.platformId)) {
+      return throwError(
+        () => new Error('Cannot save booking in non-browser environment')
+      );
+    }
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('No token found in localStorage');
@@ -104,9 +119,9 @@ export class BookingService {
       booking.movieId
     }&theatreId=${booking.theatreId}&bookingStatus=${encodeURIComponent(
       booking.bookingStatus
-    )}&seatNumber=${encodeURIComponent(booking.seatNumber)}&amount=${
-      booking.amount
-    }`;
+    )}&seatNumber=${encodeURIComponent(booking.seatNumber)}&showDate=${
+      booking.showDate
+    }&showTime=${booking.showTime}&amount=${booking.amount}`;
     console.log('Sending booking request to:', url);
     // console.log('Headers:', headers);
     return this.http.post<Booking>(url, {}, { headers }).pipe(
@@ -126,6 +141,11 @@ export class BookingService {
     movieId: number,
     theatreId: number
   ): Observable<Booking[]> {
+    if (!isPlatformBrowser(this.platformId)) {
+      return throwError(
+        () => new Error('Cannot refresh bookings in non-browser environment')
+      );
+    }
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('No token found in localStorage');
@@ -155,23 +175,50 @@ export class BookingService {
   checkSeatAvailability(
     seats: string[],
     theatreId: number,
-    movieId: number
+    movieId: number,
+    showDate: string,
+    showTime: string
   ): Observable<boolean> {
-    return this.http.post<boolean>(
-      `${this.apiUrl}/check-availability`,
-      {
-        seats,
-        theatreId,
-        movieId,
-      },
-      {
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );
+    if (!isPlatformBrowser(this.platformId)) {
+      return throwError(
+        () =>
+          new Error('Cannot check seat availability in non-browser environment')
+      );
+    }
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return throwError(() => new Error('User not authenticated'));
+    }
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+    const seatString = seats.join(',');
+    return this.http
+      .post<boolean>(
+        `${this.apiUrl}/check-availability`,
+        {
+          seats: seatString,
+          theatreId,
+          movieId,
+          showDate,
+          showTime,
+        },
+        { headers }
+      )
+      .pipe(
+        tap((isAvailable) => console.log('Seat availability:', isAvailable)),
+        catchError(this.handleError)
+      );
   }
 
   showBookings(): Observable<DisplayBooking[]> {
     const userId = this.authService.getUserId();
+    if (!isPlatformBrowser(this.platformId) || !userId) {
+      return throwError(
+        () => new Error('User not authenticated or not in browser environment')
+      );
+    }
     const token = localStorage.getItem('token');
     if (!userId || !token) {
       return throwError(() => new Error('User not authenticated'));
@@ -221,7 +268,9 @@ export class BookingService {
                     ...booking,
                     movieName: booking.movie?.movieTitle || 'N/A',
                     duration: booking.movie?.duration || 0,
-                    showTime: booking.movie?.showTime || 'N/A',
+                    genre: booking.movie?.genre || 'N/A',
+                    showTime: booking.showTime || 'N/A',
+                    showDate: booking.showDate || 'N/A',
                     theatreName: theatre.theatreName || 'N/A',
                     location: theatre.location || 'N/A',
                     screenNumber: theatre.screenNumber || 'N/A',
@@ -235,6 +284,11 @@ export class BookingService {
   }
 
   private getMovie(movieId: number): Observable<any> {
+    if (!isPlatformBrowser(this.platformId)) {
+      return throwError(
+        () => new Error('Cannot fetch theatre in non-browser environment')
+      );
+    }
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
@@ -245,6 +299,11 @@ export class BookingService {
   }
 
   private getTheatre(theatreId: number): Observable<any> {
+    if (!isPlatformBrowser(this.platformId)) {
+      return throwError(
+        () => new Error('Cannot fetch theatre in non-browser environment')
+      );
+    }
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,

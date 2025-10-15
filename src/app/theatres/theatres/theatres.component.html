@@ -22,17 +22,42 @@
 </div>
 
 <!-- Seat Selection Modal -->
- <div class="modal" [class.active]="showModal">
+<div class="modal" [class.active]="showModal">
   <div class="modal-content">
     <button class="close-btn" (click)="closeModal()">×</button>
     <h2 class="seats">Seats for {{ selectedTheater?.theatreName || 'Theater' }}</h2>
-    <div class="seat-map">
-      <div *ngFor="let seat of seats" class="seat {{ seat.status }}"
-           (click)="toggleSeat(seat)">
-        {{ seat.label }}
+    <div *ngIf="isLoading" class="loading">Loading seats...</div>
+    <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+    <div class="date-selection">
+      <h3>Select Date</h3>
+      <div class="date-grid">
+        <div *ngFor="let date of dates | slice:0:3" class="date"
+             [class.selected]="selectedDate === date"
+             (click)="selectedDate = date; onSelectionChange()">
+          {{ date | date: 'dd/MM/yy' }}
+        </div>
       </div>
     </div>
-    <div class="total">Total: ${{ totalAmount }} ({{ selectedSeats.length }} seats selected)</div>
-    <button class="pay-btn" [disabled]="selectedSeats.length === 0" (click)="proceedToPayment()">Pay Now</button>
+    <div class="showtime-selection">
+      <h3>Select Showtime</h3>
+      <div class="showtime-grid">
+        <div *ngFor="let time of showtimes" class="showtime"
+             [class.selected]="selectedShowtime === time"
+             (click)="selectedShowtime = time; onSelectionChange()">
+          {{ time }}
+        </div>
+      </div>
+    </div>
+    <div class="seat-selection">
+      <h3>Select Seats</h3>
+      <div class="seat-map">
+        <div *ngFor="let seat of seats" class="seat {{ seat.status }}"
+             (click)="toggleSeat(seat)">
+          {{ seat.label }}
+        </div>
+      </div>
+    </div>
+    <div class="total">Total: &#8377;{{ totalAmount }} ({{ selectedSeats.length }} seats selected)</div>
+    <button class="pay-btn" [disabled]="selectedSeats.length === 0 && selectedDate !== null && selectedShowtime !== null" (click)="proceedToPayment()">Pay Now</button>
   </div>
 </div>

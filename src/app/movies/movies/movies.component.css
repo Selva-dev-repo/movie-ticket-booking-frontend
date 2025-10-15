@@ -7,6 +7,7 @@
 .section-title {
   text-align: flex-start;
   font-size: 2rem;
+  margin-left: 7px;
   margin-top: 80px;
   margin-bottom: 1.5rem;
   color: #333;
@@ -47,13 +48,14 @@
 
 .movies-grid {
   /* margin-top: 80px; */
+  margin-left: 7px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
 }
 
 .movie-card {
-  background-color: rgb(216, 246, 246);
+  background-color: rgb(233, 233, 246);
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -64,7 +66,7 @@
 
 .movie-card:hover {
   transform: translateY(-5px);
-  background-color: blanchedalmond;
+  background-color: rgb(250, 225, 187);
 }
 
 .movie-poster {
@@ -89,6 +91,103 @@
 
 .movie-date {
   color: #666;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   padding: 0.5rem 0;
+}
+
+.add-movie-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal-content-movie {
+  background: rgb(235, 230, 230);
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in;
+  /* Optional animation */
+}
+
+.form-group {
+  margin-top: 15px;
+}
+
+.title-area {
+  margin-left: 10px;
+}
+
+.duration-area {
+  margin-left: 30px;
+}
+
+.show-area {
+  margin-left: 10px;
+}
+
+.modal-actions {
+  margin-top: 10px;
+}
+
+.cancel-btn {
+  background-color: #ff0000;
+}
+
+.add-btn {
+  background-color: #0578f4;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in;
+  /* Optional animation */
+}
+
+button {
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.book-ticket {
+  background-color: #0578f4;
+  color: white;
+}
+
+.close {
+  background-color: #ff0000;
+  color: white;
 }

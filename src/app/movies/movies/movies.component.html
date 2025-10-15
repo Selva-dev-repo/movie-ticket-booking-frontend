@@ -16,7 +16,7 @@
   <div class="movies-grid" *ngIf="!loading && !error">
     <div class="movie-card" *ngFor="let movie of movies" (click)="showMovieDetails(movie)">
       <img src="../../../assets/images/CinemaTicketPoster.jpg" alt="{{ movie.movieTitle }} Poster" width="20px" height="20px" class="movie-poster"/>
-      <div class="movie-title">{{ movie.movieTitle }} - {{movie.duration}}</div>
+      <div class="movie-title"><span style="text-transform: uppercase;">{{ movie.movieTitle }}</span> - {{movie.duration}} mins</div>
       <div class="movie-genre">{{ movie.genre }}</div>
       <div class="movie-date">{{ movie.releaseDate | date: 'YYYY-MM-d' }}</div>
     </div>
@@ -51,7 +51,7 @@
 <!-- Popup Modal -->
 <div *ngIf="selectedMovie" class="modal">
   <div class="modal-content">
-    <h3 class="modal-title">{{ selectedMovie.movieTitle }}</h3>
+    <h3 class="modal-title">{{ selectedMovie.movieTitle }} - {{ selectedMovie.duration }} mins</h3>
     <p class="modal-genre"> Genre: {{ selectedMovie.genre }}</p>
     <button (click)="bookTicket(selectedMovie)" class="book-ticket">Book Ticket</button>
     <button (click)="closePopup()" class="close">Close</button>

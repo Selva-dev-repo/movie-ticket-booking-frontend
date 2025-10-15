@@ -7,7 +7,7 @@
 .bookings-title {
     display: flex; 
     justify-content: flex-start; 
-    align-items: center;
+    align-items: flex-start;
     margin-top: 80px;
 }
 
@@ -15,6 +15,7 @@
     border: 1px solid rgb(188, 181, 181);
     background-color: rgb(246, 242, 242);
     margin-top: 15px;
+    /* margin-left: -35px; */
     border-radius: 15px;
     padding: 10px;
 }
@@ -23,4 +24,37 @@
     text-transform: uppercase;
     color: rgb(1, 1, 246);
     font-weight: bold;
+}
+
+.loading, .error, .no-bookings {
+  text-align: center;
+  color: #888;
+  font-size: 1.2em;
+  margin: 20px 0;
+}
+
+.all-bookings p {
+  margin: 5px 0;
+  font-size: 1em;
+  color: #333;
+}
+
+.all-bookings strong {
+  color: #333;
+  font-weight: bold;
+}
+
+.status-confirmed {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.status-pending {
+  color: #ff9800;
+  font-weight: bold;
+}
+
+.status-cancelled {
+  color: #f44336;
+  font-weight: bold;
 }

@@ -56,3 +56,30 @@
   font-size: 0.9rem;
   padding: 0.5rem 0;
 }
+
+.loading, .error, .no-bookings {
+  text-align: center;
+  color: #888;
+  font-size: 1.2em;
+  margin: 20px 0;
+}
+
+.latest-booking-card {
+  border: 2px solid #4caf50;
+  padding: 20px;
+  margin: 20px 30%;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.latest-booking-card p {
+  margin: 8px 0;
+  font-size: 1.1em;
+  color: #333;
+}
+
+.latest-booking-card strong {
+  color: #333;
+  font-weight: bold;
+}

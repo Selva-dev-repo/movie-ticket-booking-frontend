@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { HomeService, UpcomingMovies } from '../../services/home.service';
+import { BookingService, DisplayBooking } from '../../services/booking.service';
 
 @Component({
   selector: 'app-home',
@@ -14,14 +15,18 @@ import { HomeService, UpcomingMovies } from '../../services/home.service';
 })
 export class HomeComponent implements OnInit {
   movies: UpcomingMovies[] = [];
-  loading = true;
-  error = '';
+  latestBooking: DisplayBooking | null = null;
+  loading: boolean = true;
+  bookingLoading: boolean = false;
+  error: string = '';
+  bookingError: string = '';
 
-  constructor(private homeService: HomeService, private router: Router) {}
+  constructor(private homeService: HomeService, private bookingService: BookingService, private router: Router) {}
 
   ngOnInit() {
     this.upcomingMovies();
     // this.releasedMovies();
+    this.fetchLatestBooking();
   }
 
   upcomingMovies() {
@@ -44,6 +49,22 @@ export class HomeComponent implements OnInit {
       error: (err) => {
         console.error('Error fetching released movies:', err);
       },
+    });
+  }
+fetchLatestBooking(): void {
+    this.bookingLoading = true;
+    this.bookingError = '';
+    this.bookingService.showBookings().subscribe({
+      next: (bookings) => {
+        this.latestBooking = bookings.sort((a, b) => b.bookingId - a.bookingId)[0] || null;
+        // console.log('Latest booking fetched:', this.latestBooking);
+        this.bookingLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching latest booking:', err);
+        this.bookingError = 'Failed to load latest booking. Please try again.';
+        this.bookingLoading = false;
+      }
     });
   }
 }
