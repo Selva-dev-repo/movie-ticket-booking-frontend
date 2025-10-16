@@ -5,9 +5,9 @@
       {{ errorMessage }}
     </div>
     <div *ngIf="user; else loading">
-      <h3 class="text-3xl font-bold text-gray-800">
+      <h2 class="userName-text">
         Hi {{ user.userName }}!
-      </h3>
+      </h2>
       <p class="text-lg text-gray-600 mt-2">
         User ID: {{ user.userId }}
       </p>

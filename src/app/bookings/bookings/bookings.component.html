@@ -24,7 +24,7 @@
             'status-confirmed': booking.bookingStatus === 'Confirmed',
             'status-pending': booking.bookingStatus === 'Pending',
             'status-cancelled': booking.bookingStatus === 'Cancelled'
-          }">${{ booking.amount || 'N/A' }} - {{ booking.bookingStatus || 'N/A' }}</span></p>
+          }">₹{{ booking.amount || 'N/A' }} - {{ booking.bookingStatus || 'N/A' }}</span></p>
         </div>
       </li>
     </ul>

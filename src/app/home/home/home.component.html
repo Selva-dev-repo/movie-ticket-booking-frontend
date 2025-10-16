@@ -10,7 +10,8 @@
 
   <!-- Latest booking -->
   <div *ngIf="!bookingLoading && !bookingError && latestBooking" class="latest-booking-card">
-    <p><strong>Movie:</strong> <span class="movie-title">{{ latestBooking.movieName || 'N/A' }}</span> - {{
+    <h2 class="home-ticket-view">Your Latest Booking</h2>
+    <p><strong>Movie: </strong> <span class="movie-title">{{ latestBooking.movieName || 'N/A' }}</span> - {{
       latestBooking.duration || 'N/A' }} min</p>
     <p><strong>Theatre:</strong> {{ latestBooking.theatreName || 'N/A' }} - {{ latestBooking.location || 'N/A' }}</p>
     <p><strong>Screen:</strong> {{ latestBooking.screenNumber || 'N/A' }}</p>

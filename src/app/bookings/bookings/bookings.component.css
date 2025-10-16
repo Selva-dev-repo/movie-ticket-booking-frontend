@@ -13,16 +13,17 @@
 
 .all-bookings {
     border: 1px solid rgb(188, 181, 181);
-    background-color: rgb(246, 242, 242);
+    background-color: rgb(216, 230, 245);
     margin-top: 15px;
     /* margin-left: -35px; */
+    line-height: 30px;
     border-radius: 15px;
     padding: 10px;
 }
 
 .movie-title {
     text-transform: uppercase;
-    color: rgb(1, 1, 246);
+    color: rgb(246, 1, 1);
     font-weight: bold;
 }
 
@@ -36,6 +37,7 @@
 .all-bookings p {
   margin: 5px 0;
   font-size: 1em;
+  font-weight: 600;
   color: #333;
 }
 
@@ -45,7 +47,7 @@
 }
 
 .status-confirmed {
-  color: #4caf50;
+  color: #04ad02;
   font-weight: bold;
 }
 

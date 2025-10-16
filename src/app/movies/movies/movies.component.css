@@ -55,11 +55,12 @@
 }
 
 .movie-card {
-  background-color: rgb(233, 233, 246);
+  background-color: rgb(198, 234, 244);
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   text-align: center;
+  padding-bottom: .7rem;
   transition: transform 0.2s ease;
   cursor: pointer;
 }
@@ -71,13 +72,13 @@
 
 .movie-poster {
   margin-top: 20px;
-  width: 50%;
-  height: 100px;
+  width: 60%;
+  height: 200px;
   object-fit: cover;
 }
 
 .movie-title {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: bold;
   margin: 1rem 0 0.5rem;
   color: #222;
@@ -89,9 +90,15 @@
   margin-bottom: 0.5rem;
 }
 
+.movie-genre {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
 .movie-date {
-  color: #666;
+  color: #333;
   font-size: 0.95rem;
+  font-weight: 500;
   padding: 0.5rem 0;
 }
 

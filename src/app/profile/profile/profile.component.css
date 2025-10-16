@@ -12,11 +12,16 @@
   color: #333;
 }
 
+.userName-text {
+    color: blue;
+}
+
 .profile-buttons {
     /* mt-6 flex space-x-4 */
     display: flex;
     margin-top: 6px;
-    gap: 10px;
+    padding: 10px;
+    gap: 15px;
 }
 
 .footer {
