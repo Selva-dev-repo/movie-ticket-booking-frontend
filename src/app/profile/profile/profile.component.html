@@ -1,7 +1,10 @@
 <div class="profile-container">
   <h2 class="profile-heading">Profile</h2>
   <div class="container mx-auto px-4 py-8">
-    <div *ngIf="errorMessage" class="text-red-500 text-center">
+    <div *ngIf="successMessage" class="success">
+      <p>{{ successMessage }}</p>
+    </div>
+    <div *ngIf="errorMessage" class="error">
       {{ errorMessage }}
     </div>
     <div *ngIf="user; else loading">
@@ -14,11 +17,14 @@
       <p class="text-lg text-gray-600 mt-2">
         Role: {{ user.role }}
       </p>
+      <p class="text-lg text-gray-600 mt-2">
+        Mobile Number: {{ user.mobileNumber }}
+      </p>
       <div class="profile-buttons">
-        <button (click)="editProfile()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+        <button (click)="editProfile()" class="edit-btn">
           Edit Profile
         </button>
-        <button (click)="logout()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
+        <button (click)="logout()" class="logout-btn">
           Logout
         </button>
       </div>
@@ -37,4 +43,59 @@
       <p class="text-center">&copy; 2025 Your Company. All rights reserved.</p>
     </div>
   </footer>
+</div>
+
+<!-- Edit profile form -->
+ <div *ngIf="showModal" class="modal">
+  <div class="modal-content">
+    <span class="close" (click)="closeModal()">&times;</span>
+    <h2>Edit Profile</h2>
+    <form [formGroup]="editForm" (ngSubmit)="submitEdit()">
+      <div class="form-group">
+        <!-- <label for="userName">Username:</label> -->
+        <input id="userName" placeholder="Username" formControlName="userName" type="text"/>
+        <div *ngIf="editForm.get('userName')?.invalid && editForm.get('userName')?.touched" class="error">
+          Username is required.
+        </div>
+      </div>
+      <div class="form-group">
+        <!-- <label for="role">Role:</label> -->
+        <input id="role" placeholder="Role" formControlName="role" type="text" />
+      </div>
+      <div class="form-group">
+        <!-- <label for="mobileNumber">Mobile Number:</label> -->
+        <input id="mobileNumber" placeholder="Mobile number" formControlName="mobileNumber" type="text" />
+        <div *ngIf="editForm.get('mobileNumber')?.invalid && editForm.get('mobileNumber')?.touched" class="error">
+          Mobile number must be up to 15 digits.
+        </div>
+      </div>
+      <div class="form-group">
+        <!-- <label for="address">Address:</label> -->
+        <input id="address" placeholder="Address" formControlName="address" type="text" />
+      </div>
+      <div class="form-group">
+        <!-- <label for="city">City:</label> -->
+        <input id="city" placeholder="City" formControlName="city" type="text" />
+      </div>
+      <div class="form-group">
+        <!-- <label for="pincode">Pincode:</label> -->
+        <input id="pincode" placeholder="Pincode" formControlName="pincode" type="text" />
+        <div *ngIf="editForm.get('pincode')?.invalid && editForm.get('pincode')?.touched" class="error">
+          Pincode must be up to 10 digits.
+        </div>
+      </div>
+      <div class="form-group">
+        <!-- <label for="state">State:</label> -->
+        <input id="state" placeholder="State" formControlName="state" type="text" />
+      </div>
+      <div class="form-group">
+        <!-- <label for="country">Country:</label> -->
+        <input id="country" placeholder="Country" formControlName="country" type="text" />
+      </div>
+      <div class="form-actions">
+        <button type="submit" [disabled]="!editForm.get('userName')?.valid">Save Changes</button>
+        <button type="button" (click)="closeModal()">Cancel</button>
+      </div>
+    </form>
+  </div>
 </div>

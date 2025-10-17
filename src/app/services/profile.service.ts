@@ -7,19 +7,25 @@ export interface User {
   userName: string;
   password: string;
   role: 'admin' | 'user';
+  mobileNumber: string;
+  address: string;
+  pincode: string;
+  city: string;
+  state: string;
+  country: string;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProfileService {
-  private apiUrl = 'http://localhost:8080/api';
+  private apiUrl = 'http://localhost:8080/api/users';
 
   constructor(private http: HttpClient) {}
 
   getUser(userId: number): Observable<User> {
     // console.log(`Fetching user with ID: ${userId}`);
-    return this.http.get<User>(`${this.apiUrl}/users/${userId}`).pipe(
+    return this.http.get<User>(`${this.apiUrl}/${userId}`).pipe(
       catchError((error: any) => {
         console.error(`Error fetching user with ID ${userId}:`, error);
         let errorMessage = 'Failed to fetch user data';
@@ -38,5 +44,9 @@ export class ProfileService {
         return throwError(() => new Error(errorMessage));
       })
     );
+  }
+
+  updateUser(userId: number, userData: Partial<User>): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/${userId}`, userData);
   }
 }

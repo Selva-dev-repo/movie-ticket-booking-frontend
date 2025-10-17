@@ -74,6 +74,13 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.movie-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 1rem 0 0.5rem;
+  color: #870004;
+}
+
 .home-ticket-view {
   display: flex;
   justify-content: center;

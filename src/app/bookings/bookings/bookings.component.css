@@ -8,6 +8,7 @@
     display: flex; 
     justify-content: flex-start; 
     align-items: flex-start;
+    font-size: 2rem;
     margin-top: 80px;
 }
 

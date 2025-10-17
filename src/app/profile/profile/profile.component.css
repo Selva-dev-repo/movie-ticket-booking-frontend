@@ -16,8 +16,27 @@
     color: blue;
 }
 
+.edit-btn {
+    margin-left: -5px;
+    padding: 10px;
+    background-color: aqua;
+    font-size: 12px;
+    font-weight: 700;
+    border: 1px solid aqua;
+    border-radius: 10px;
+}
+
+.logout-btn {
+    margin-left: -5px;
+    padding: 10px;
+    background-color: red;
+    font-size: 12px;
+    font-weight: 700;
+    border: 1px solid red;
+    border-radius: 10px;
+}
+
 .profile-buttons {
-    /* mt-6 flex space-x-4 */
     display: flex;
     margin-top: 6px;
     padding: 10px;
@@ -28,6 +47,7 @@
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    margin-top: 150px;
 }
 
 .options {
@@ -38,5 +58,88 @@
 }
 
 .about, .contact, .policy {
-    padding: 10px;
+    padding: 15px;
+}
+
+.error {
+  color: red;
+  font-size: 20px;
+}
+
+.success {
+    color: green;
+    font-size: 20px;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button[type="submit"] {
+  background-color: #28a745;
+  color: white;
+}
+
+button[type="submit"]:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+button[type="button"] {
+  background-color: #dc3545;
+  color: white;
 }
