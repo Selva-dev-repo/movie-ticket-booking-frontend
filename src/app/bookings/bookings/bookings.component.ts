@@ -19,7 +19,9 @@ import { Router } from '@angular/router';
 })
 export class BookingsComponent implements OnInit {
   bookings: DisplayBooking[] = [];
+  selectedBooking: DisplayBooking | null = null;
   loading: boolean = true;
+  showModal: boolean = false;
   userName: string = '';
   error: string | null = null;
 
@@ -53,6 +55,40 @@ export class BookingsComponent implements OnInit {
         }
       },
     });
+  }
+
+openModal(bookingId: number): void {
+    this.showModal = true;
+    this.loading = true;
+    this.error = null;
+    this.selectedBooking = null;
+
+    this.bookingService.getBookingById(bookingId).subscribe({
+      next: (data: DisplayBooking) => {
+        this.selectedBooking = {
+        bookingId: data.bookingId,
+        bookingStatus: data.bookingStatus,
+        seatNumber: data.seatNumber,
+        showDate: data.showDate,
+        showTime: data.showTime,
+        amount: data.amount,
+        movieName: data.movie?.movieTitle ?? '',
+        theatreName: data.theatre?.theatreName ?? '',
+        location: data.theatre?.location ?? '',
+        duration: data.movie?.duration ?? 0,
+        screenNumber: data.theatre?.screenNumber ?? '',
+      };
+      this.loading = false;
+      },
+      error: (err) => {
+        this.error = err.message || 'Failed to fetch booking.';
+        this.loading = false;
+      }
+    });
+  }
+
+  closeModal() {
+    this.showModal = false;
   }
 
   logout(): void {

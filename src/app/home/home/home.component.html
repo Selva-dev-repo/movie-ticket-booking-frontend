@@ -1,6 +1,6 @@
 <div class="upcoming-movies">
   <!-- Booking Loading state -->
-  <div *ngIf="bookingLoading" class="loading">Loading booking...</div>
+  <div *ngIf="bookingLoading && !bookingLoading" class="loading">Loading booking...</div>
 
   <!-- Booking Error state -->
   <div *ngIf="bookingError && !bookingLoading" class="error">{{ bookingError }}</div>
@@ -23,6 +23,29 @@
       'status-pending': latestBooking.bookingStatus === 'Pending',
       'status-cancelled': latestBooking.bookingStatus === 'Cancelled'
     }"> ₹{{ latestBooking.amount || 'N/A' }} - {{ latestBooking.bookingStatus || 'N/A' }}</span></p>
+    <div class="viewTicket"><button type="button" (click)="viewTicket()" class="view-btn">View Ticket</button></div>
+  </div>
+
+  <!-- View Ticket Modal -->
+  <div *ngIf="showModal && latestBooking" class="modal">
+    <div class="modal-content">
+      <div class="close"><button type="button" class="close-btn" (click)="closeModal()">X</button></div>
+      <div *ngIf="!loading">Loading booking details...</div>
+      <div class="modal-ticket">
+      <p><strong>Movie: </strong> <span class="movie-name">{{ latestBooking.movieName || 'N/A' }}</span> - {{
+        latestBooking.duration || 'N/A' }} min</p>
+      <p><strong>Theatre:</strong> {{ latestBooking.theatreName || 'N/A' }} - {{ latestBooking.location || 'N/A' }}</p>
+      <p><strong>Screen:</strong> {{ latestBooking.screenNumber || 'N/A' }}</p>
+      <p><strong>Date:</strong> {{ latestBooking.showDate | date: 'dd/MM/yy' }}</p>
+      <p><strong>Show Time:</strong> {{ latestBooking.showTime || 'N/A' }}</p>
+      <p><strong>Seats:</strong> {{ latestBooking.seatNumber || 'N/A' }}</p>
+      <p><strong>Amount & Status:</strong> <span [ngClass]="{
+      'status-confirmed': latestBooking.bookingStatus === 'Confirmed',
+      'status-pending': latestBooking.bookingStatus === 'Pending',
+      'status-cancelled': latestBooking.bookingStatus === 'Cancelled'
+    }"> ₹{{ latestBooking.amount || 'N/A' }} - {{ latestBooking.bookingStatus || 'N/A' }}</span></p>
+    </div>
+    </div>
   </div>
 
   <!-- Upcoming movies -->

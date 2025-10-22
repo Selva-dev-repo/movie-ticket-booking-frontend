@@ -61,6 +61,7 @@
   overflow: hidden;
   text-align: center;
   padding-bottom: .7rem;
+  padding: 10px;
   transition: transform 0.2s ease;
   cursor: pointer;
 }

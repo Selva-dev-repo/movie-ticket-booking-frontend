@@ -24,7 +24,7 @@
 
 .movie-title {
     text-transform: uppercase;
-    color: rgb(246, 1, 1);
+    color: rgb(233, 0, 0);
     font-weight: bold;
 }
 
@@ -60,4 +60,65 @@
 .status-cancelled {
   color: #f44336;
   font-weight: bold;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: rgb(222, 252, 255);
+  padding: 20px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+}
+
+.modal-ticket {
+  margin-top: -40px;
+}
+
+.modal-content .movie-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 1rem 0 0.5rem;
+  color: #9f4200;
+}
+
+.viewTicket {
+  display: flex;
+  justify-content: center;
+  width: 91%;
+  margin: 20px;
+}
+
+.view-btn {
+  border: 1px solid #4CAF50;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+.close {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.close-btn {
+  border: none;
+  color: lightslategray;
+  background-color: rgb(222, 252, 255);
 }

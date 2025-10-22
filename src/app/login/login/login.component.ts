@@ -42,7 +42,7 @@ export class LoginComponent {
       },
       error: (err) => {
         console.error('Unexpected login error:', err);
-        this.loginMessage = 'Unexpected error occurred';
+        this.loginMessage = 'Invalid username or password';
       },
     });
   }

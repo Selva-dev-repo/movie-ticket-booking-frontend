@@ -51,14 +51,25 @@ export interface SaveBooking {
   theatreId: number;
 }
 
-export interface DisplayBooking extends Booking {
+export interface DisplayBooking extends Booking { 
+  // movieName: string;
+  // theatreName: string;
+  // location: string;
+  // duration: number;
+  // screenNumber: string;
+  // showDate: string;
+  // showTime: string;
+  bookingId: number;
+  bookingStatus: string;
+  seatNumber: string;
+  showDate: string;
+  showTime: string;
+  amount: number;
   movieName: string;
   theatreName: string;
   location: string;
   duration: number;
   screenNumber: string;
-  showDate: string;
-  showTime: string;
 }
 
 @Injectable({
@@ -98,6 +109,10 @@ export class BookingService {
         tap((bookings) => this.bookingsSubject.next(bookings)),
         catchError(this.handleError)
       );
+  }
+
+  getBookingById(bookingId: number): Observable<DisplayBooking> {
+    return this.http.get<DisplayBooking>(`${this.apiUrl}/${bookingId}`);
   }
 
   saveBooking(booking: SaveBooking): Observable<Booking> {

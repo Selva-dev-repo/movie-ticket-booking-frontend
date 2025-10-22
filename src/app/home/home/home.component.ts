@@ -18,10 +18,15 @@ export class HomeComponent implements OnInit {
   latestBooking: DisplayBooking | null = null;
   loading: boolean = true;
   bookingLoading: boolean = false;
+  showModal: boolean = false;
   error: string = '';
   bookingError: string = '';
 
-  constructor(private homeService: HomeService, private bookingService: BookingService, private router: Router) {}
+  constructor(
+    private homeService: HomeService,
+    private bookingService: BookingService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.upcomingMovies();
@@ -51,12 +56,13 @@ export class HomeComponent implements OnInit {
       },
     });
   }
-fetchLatestBooking(): void {
+  fetchLatestBooking(): void {
     this.bookingLoading = true;
     this.bookingError = '';
     this.bookingService.showBookings().subscribe({
       next: (bookings) => {
-        this.latestBooking = bookings.sort((a, b) => b.bookingId - a.bookingId)[0] || null;
+        this.latestBooking =
+          bookings.sort((a, b) => b.bookingId - a.bookingId)[0] || null;
         // console.log('Latest booking fetched:', this.latestBooking);
         this.bookingLoading = false;
       },
@@ -64,7 +70,30 @@ fetchLatestBooking(): void {
         console.error('Error fetching latest booking:', err);
         this.bookingError = 'Failed to load latest booking. Please try again.';
         this.bookingLoading = false;
-      }
+      },
     });
+  }
+
+  viewTicket(): void {
+    this.bookingLoading = true;
+    this.showModal = true;
+    this.bookingError = '';
+    this.bookingService.showBookings().subscribe({
+      next: (bookings) => {
+        this.latestBooking =
+          bookings.sort((a, b) => b.bookingId - a.bookingId)[0] || null;
+        // console.log('Latest booking fetched:', this.latestBooking);
+        this.bookingLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching latest booking:', err);
+        this.bookingError = 'Failed to load latest booking. Please try again.';
+        this.bookingLoading = false;
+      },
+    });
+  }
+
+  closeModal() {
+    this.showModal = false;
   }
 }
