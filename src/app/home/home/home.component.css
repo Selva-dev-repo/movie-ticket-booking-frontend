@@ -18,7 +18,7 @@
 }
 
 .movie-card {
-  background-color: rgb(170, 214, 254);
+  background-color: rgb(198, 226, 253);
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -53,7 +53,7 @@
 }
 
 .movie-date {
-  color: #666;
+  color: #000;
   font-size: 0.9rem;
   padding: 0.5rem 0;
 }
