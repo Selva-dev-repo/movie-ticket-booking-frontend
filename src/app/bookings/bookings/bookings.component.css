@@ -14,7 +14,7 @@
 
 .all-bookings {
     border: 1px solid rgb(255, 253, 219);
-    background-color: rgb(255, 253, 219);
+    background-color: rgb(252, 244, 233);
     margin-top: 15px;
     /* margin-left: -35px; */
     line-height: 30px;
@@ -24,7 +24,7 @@
 
 .movie-title {
     text-transform: uppercase;
-    color: rgb(233, 0, 0);
+    color: rgb(2, 137, 255);
     font-weight: bold;
 }
 
