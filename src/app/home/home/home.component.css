@@ -18,7 +18,7 @@
 }
 
 .movie-card {
-  background-color: rgb(224, 238, 251);
+  background-color: rgb(170, 214, 254);
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -66,7 +66,7 @@
 }
 
 .latest-booking-card {
-  border: 2px solid #c9ebe5;
+  border: 2px solid #d0f5e7;
   padding: 10px 15px;
   margin: 50px 25%;
   border-radius: 8px;
