@@ -111,7 +111,7 @@
 }
 
 .modal-content {
-  background-color: rgb(205, 251, 152);
+  background-color: rgb(215, 248, 177);
   padding: 20px;
   border-radius: 15px;
   width: 90%;
@@ -155,7 +155,7 @@
 .close-btn {
   border: none;
   color: rgb(108, 123, 139);
-  background-color: rgb(205, 251, 152);
+  background-color: rgb(215, 248, 177);
 }
 
 .status-confirmed {

@@ -20,6 +20,7 @@ import { Router } from '@angular/router';
 export class BookingsComponent implements OnInit {
   bookings: DisplayBooking[] = [];
   selectedBooking: DisplayBooking | null = null;
+  selectedBookingId: number | null = null;
   loading: boolean = true;
   showModal: boolean = false;
   userName: string = '';
@@ -90,6 +91,30 @@ openModal(bookingId: number): void {
   closeModal() {
     this.showModal = false;
   }
+
+  openCancelModal(bookingId: number): void {
+    this.selectedBookingId = bookingId;
+    this.showModal = true;
+  }
+
+  confirmCancel(confirm: boolean): void {
+    if (confirm && this.selectedBookingId) {
+      console.log(this.authService.getUserId());
+      
+        // this.bookingService.cancelBooking(this.selectedBookingId, this.authService.getUserById()).subscribe({
+        //     next: (booking: Booking) => {
+        //         alert('Ticket cancelled successfully!');
+        //         this.fetchBookings(); // Refresh bookings
+        //     },
+        //     error: (err) => {
+        //         console.error('Error cancelling booking:', err);
+        //         alert('Failed to cancel ticket: ' + (err.error || 'Unknown error'));
+        //     }
+        // });
+    }
+    this.showModal = false;
+    this.selectedBookingId = null;
+}
 
   logout(): void {
     this.bookings = [];

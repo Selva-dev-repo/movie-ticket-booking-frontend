@@ -298,6 +298,10 @@ export class BookingService {
       );
   }
 
+  cancelBooking(bookingId: number, userId: number): Observable<Booking> {
+    return this.http.put<Booking>(`${this.apiUrl}/${bookingId}/cancel?userId=${userId}`, {});
+  }
+
   private getMovie(movieId: number): Observable<any> {
     if (!isPlatformBrowser(this.platformId)) {
       return throwError(
