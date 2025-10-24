@@ -18,7 +18,7 @@
 }
 
 .movie-card {
-  background-color: rgb(198, 226, 253);
+  background-color: rgb(211, 255, 189);
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -29,7 +29,7 @@
 
 .movie-card:hover {
   transform: translateY(-5px);
-  background-color: bisque;
+  background-color: rgb(189, 240, 255);
 }
 
 .movie-poster {
@@ -66,11 +66,11 @@
 }
 
 .latest-booking-card {
-  border: 2px solid #d0f5e7;
+  border: 2px solid #fef1d8;
   padding: 10px 15px;
   margin: 50px 25%;
   border-radius: 8px;
-  background-color: #d0f5e7;
+  background-color: #fef1d8;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -78,7 +78,7 @@
   font-size: 1.2rem;
   font-weight: bold;
   margin: 1rem 0 0.5rem;
-  color: #870004;
+  color: #5f00ac;
 }
 
 .home-ticket-view {
@@ -111,7 +111,7 @@
 }
 
 .modal-content {
-  background-color: rgb(228, 247, 207);
+  background-color: rgb(205, 251, 152);
   padding: 20px;
   border-radius: 15px;
   width: 90%;
@@ -154,6 +154,21 @@
 
 .close-btn {
   border: none;
-  color: lightslategray;
-  background-color: rgb(228, 247, 207);
+  color: rgb(108, 123, 139);
+  background-color: rgb(205, 251, 152);
+}
+
+.status-confirmed {
+  color: rgb(0, 161, 0);
+  font-weight: bold;
+}
+
+.status-pending {
+  color: #ff9800;
+  font-weight: bold;
+}
+
+.status-cancelled {
+  color: #f44336;
+  font-weight: bold;
 }

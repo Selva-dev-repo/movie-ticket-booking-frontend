@@ -15,14 +15,14 @@
       latestBooking.duration || 'N/A' }} min</p>
     <p><strong>Theatre:</strong> {{ latestBooking.theatreName || 'N/A' }} - {{ latestBooking.location || 'N/A' }}</p>
     <p><strong>Screen:</strong> {{ latestBooking.screenNumber || 'N/A' }}</p>
-    <p><strong>Date:</strong> {{ latestBooking.showDate | date: 'dd/MM/yy' }}</p>
-    <p><strong>Show Time:</strong> {{ latestBooking.showTime || 'N/A' }}</p>
+    <p><strong>Date & Show Time:</strong> {{ latestBooking.showDate | date: 'dd/MM/yy' }} - {{ latestBooking.showTime || 'N/A' }}</p>
     <p><strong>Seats:</strong> {{ latestBooking.seatNumber || 'N/A' }}</p>
-    <p><strong>Amount & Status:</strong> <span [ngClass]="{
+    <p><strong>Amount:</strong> ₹{{ latestBooking.amount || 'N/A' }}</p>
+    <p><strong>Booking Status:</strong> <span [ngClass]="{
       'status-confirmed': latestBooking.bookingStatus === 'Confirmed',
       'status-pending': latestBooking.bookingStatus === 'Pending',
       'status-cancelled': latestBooking.bookingStatus === 'Cancelled'
-    }"> ₹{{ latestBooking.amount || 'N/A' }} - {{ latestBooking.bookingStatus || 'N/A' }}</span></p>
+    }"> {{ latestBooking.bookingStatus || 'N/A' }}</span></p>
     <div class="viewTicket"><button type="button" (click)="viewTicket()" class="view-btn">View Ticket</button></div>
   </div>
 
@@ -58,7 +58,7 @@
       <div class="movie-title"><span style="text-transform: uppercase;">{{ movie.movieTitle }}</span> -
         {{movie.duration}} mins</div>
       <div class="movie-genre">{{ movie.genre }}</div>
-      <div class="movie-date">{{ movie.releaseDate | date: 'YYYY-MM-d' }}</div>
+      <div class="movie-date">Date of Release: {{ movie.releaseDate | date: 'YYYY-MM-d' }}</div>
     </div>
   </div>
 </div>

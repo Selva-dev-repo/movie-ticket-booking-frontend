@@ -55,7 +55,7 @@
 }
 
 .movie-card {
-  background-color: rgb(198, 234, 244);
+  background-color: rgb(193, 210, 246);
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -68,7 +68,7 @@
 
 .movie-card:hover {
   transform: translateY(-5px);
-  background-color: rgb(250, 225, 187);
+  background-color: rgb(255, 230, 150);
 }
 
 .movie-poster {

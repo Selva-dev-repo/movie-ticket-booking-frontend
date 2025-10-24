@@ -20,11 +20,12 @@
           <p><strong>Show Time:</strong> {{ booking.showDate }} / {{ booking.showTime || 'N/A' }}</p>
           <p><strong>Screen:</strong> {{ booking.screenNumber || 'N/A' }}</p>
           <p><strong>Seats:</strong> {{ booking.seatNumber || 'N/A' }}</p>
-          <p><strong>Amount & Booking Status:</strong> <span [ngClass]="{
+          <p><strong>Amount:</strong> ₹{{ booking.amount || 'N/A' }}</p>
+          <p><strong>Booking Status:</strong> <span [ngClass]="{
             'status-confirmed': booking.bookingStatus === 'Confirmed',
             'status-pending': booking.bookingStatus === 'Pending',
             'status-cancelled': booking.bookingStatus === 'Cancelled'
-          }"> ₹{{ booking.amount || 'N/A' }} - {{ booking.bookingStatus || 'N/A' }}</span></p>
+          }"> {{ booking.bookingStatus || 'N/A' }}</span></p>
         </div>
       </li>
     </ul>
