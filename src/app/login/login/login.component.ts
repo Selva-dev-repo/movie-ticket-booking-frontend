@@ -31,7 +31,7 @@ export class LoginComponent {
           const username =
             this.authService.getUserName() || this.users.userName;
           const role = this.authService.getRole();
-          if (role === 'admin') {
+          if (role === 'Admin') {
             this.router.navigate(['/movies']);
           } else {
             this.router.navigate(['/home']);

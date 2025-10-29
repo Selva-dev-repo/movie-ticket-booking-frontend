@@ -2,6 +2,7 @@ import {
   HttpClient,
   HttpErrorResponse,
   HttpHeaders,
+  HttpParams,
 } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import {
@@ -51,14 +52,7 @@ export interface SaveBooking {
   theatreId: number;
 }
 
-export interface DisplayBooking extends Booking { 
-  // movieName: string;
-  // theatreName: string;
-  // location: string;
-  // duration: number;
-  // screenNumber: string;
-  // showDate: string;
-  // showTime: string;
+export interface DisplayBooking extends Booking {
   bookingId: number;
   bookingStatus: string;
   seatNumber: string;
@@ -113,6 +107,41 @@ export class BookingService {
 
   getBookingById(bookingId: number): Observable<DisplayBooking> {
     return this.http.get<DisplayBooking>(`${this.apiUrl}/${bookingId}`);
+  }
+
+  // cancelBooking(bookingId: number): Observable<void> {
+  //   return this.http.delete<void>(`${this.apiUrl}/bookings/${bookingId}`);
+  // }
+
+  cancelBooking(bookingId: number): Observable<Booking> {
+    const userId = this.authService.getUserId();
+    if (!isPlatformBrowser(this.platformId) || !userId) {
+      return throwError(
+        () => new Error('User not authenticated or not in browser environment')
+      );
+    }
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return throwError(() => new Error('User not authenticated'));
+    }
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    // Backend endpoint to cancel a booking
+    return this.http
+      .put<Booking>(
+        `${this.apiUrl}/${bookingId}/cancel?userId=${userId}`,
+        {},
+        { headers }
+      )
+      .pipe(
+        tap(() => console.log(`Booking ${bookingId} cancelled successfully`)),
+        catchError(this.handleError)
+      );
   }
 
   saveBooking(booking: SaveBooking): Observable<Booking> {
@@ -193,38 +222,26 @@ export class BookingService {
     movieId: number,
     showDate: string,
     showTime: string
-  ): Observable<boolean> {
+  ): Observable<boolean[]> {
     if (!isPlatformBrowser(this.platformId)) {
-      return throwError(
-        () =>
-          new Error('Cannot check seat availability in non-browser environment')
-      );
+      return throwError(() => new Error('Not in browser'));
     }
+
     const token = localStorage.getItem('token');
     if (!token) {
-      return throwError(() => new Error('User not authenticated'));
+      return throwError(() => new Error('Not authenticated'));
     }
+
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     });
-    const seatString = seats.join(',');
+
+    const body = { seats, theatreId, movieId, showDate, showTime };
+
     return this.http
-      .post<boolean>(
-        `${this.apiUrl}/check-availability`,
-        {
-          seats: seatString,
-          theatreId,
-          movieId,
-          showDate,
-          showTime,
-        },
-        { headers }
-      )
-      .pipe(
-        tap((isAvailable) => console.log('Seat availability:', isAvailable)),
-        catchError(this.handleError)
-      );
+      .post<boolean[]>(`${this.apiUrl}/check-availability`, body, { headers })
+      .pipe(catchError(this.handleError));
   }
 
   showBookings(): Observable<DisplayBooking[]> {
@@ -296,10 +313,6 @@ export class BookingService {
         ),
         catchError(this.handleError)
       );
-  }
-
-  cancelBooking(bookingId: number, userId: number): Observable<Booking> {
-    return this.http.put<Booking>(`${this.apiUrl}/${bookingId}/cancel?userId=${userId}`, {});
   }
 
   private getMovie(movieId: number): Observable<any> {

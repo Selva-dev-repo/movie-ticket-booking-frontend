@@ -7,7 +7,7 @@ export interface Movie {
   movieTitle: string;
   duration: string;
   genre: string;
-  posterUrl: string;
+  poster: string;
   releaseDate: string;
   movieStatus: string;
 }
@@ -16,7 +16,7 @@ export interface AddMovie {
   movieTitle: string;
   duration: number;
   genre: string;
-  posterUrl: string;
+  poster: string;
   releaseDate: string;
   movieStatus: string;
 }

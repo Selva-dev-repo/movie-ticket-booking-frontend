@@ -22,7 +22,7 @@ export class MoviesComponent implements OnInit {
   userName: string = '';
   isAdmin: boolean = false;
   showAddMovieModal: boolean = false;
-  newMovie: AddMovie = { movieTitle: '', duration: 0, genre: '', posterUrl: '', releaseDate: '', movieStatus: '' };
+  newMovie: AddMovie = { movieTitle: '', duration: 0, genre: '', poster: '', releaseDate: '', movieStatus: '' };
   error = '';
 
   constructor(private movieService: MovieService, private homeService: HomeService, private authService: AuthService, private router: Router) {}
@@ -32,7 +32,7 @@ export class MoviesComponent implements OnInit {
     const role = this.authService.getRole();
     if (userName && this.authService.isLoggedIn()) {
       this.userName = userName;
-      this.isAdmin = role === 'admin';
+      this.isAdmin = role === 'Admin';
       this.releasedMovies();
     } else {
       this.authService.logout();
@@ -73,7 +73,7 @@ export class MoviesComponent implements OnInit {
   }
 
   openAddMovieModal() {
-    this.newMovie = { movieTitle: '', duration: 0, genre: '', posterUrl: '', releaseDate: '', movieStatus: '' };
+    this.newMovie = { movieTitle: '', duration: 0, genre: '', poster: '', releaseDate: '', movieStatus: '' };
     this.showAddMovieModal = true;
   }
 
@@ -82,7 +82,7 @@ export class MoviesComponent implements OnInit {
   }
 
   addMovie() {
-    console.log('Submitting movie:', this.newMovie);
+    // console.log('Submitting movie:', this.newMovie);
     this.error = '';
     if (!this.newMovie.movieTitle || !this.newMovie.duration || !this.newMovie.genre) {
       this.error = 'All fields are required';
@@ -102,6 +102,8 @@ export class MoviesComponent implements OnInit {
   }
 
   showMovieDetails(movie: Movie) {
+    // console.log(movie);
+    
     this.selectedMovie = movie;
   }
 

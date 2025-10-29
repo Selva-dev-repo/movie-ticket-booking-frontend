@@ -33,15 +33,43 @@
       <p class="text-lg text-gray-600 text-center">Loading user data...</p>
     </ng-template>
   </div>
+
+  <div class="content">
+    <div *ngIf="activeTab === 'about'">
+      <h2>About Us</h2>
+      <p>
+        The Ticket Booking App is an online platform that allows users to easily browse movies, view details like posters, genres, and release dates, and book tickets in just a few clicks.
+        Admins can manage movie listings by adding, updating, or removing movies, ensuring that users always see the latest releases.
+        The app provides a smooth, user-friendly experience for both movie lovers and administrators.
+      </p>
+    </div>
+
+    <div *ngIf="activeTab === 'contact'">
+      <h2>Contact Information</h2>
+      <p>Email: support-ticketbooking.com</p>
+      <p>Phone: +1-800-123-4567</p>
+      <p>Address: 123 Movie Lane, Entertainment City, India</p>
+    </div>
+
+    <div *ngIf="activeTab === 'privacy'">
+      <h2>Privacy Policy</h2>
+      <p>
+        Your privacy is important to us. We collect only the necessary information to provide you with
+        a personalized experience. Your data is securely stored and never shared without your consent.
+        For more details, please review our full privacy policy.
+      </p>
+    </div>
+  </div>
+  
   <footer class="bg-gray-800 text-white py-4">
     <div class="footer">
       <div class="options">
-        <span class="about">About</span>
-        <span class="contact">Contact</span>
-        <span class="policy">Privacy Policy</span>
+        <button [class.active]="activeTab === 'about'" class="about" (click)="setActiveTab('about')">About</button>
+        <button [class.active]="activeTab === 'contact'" class="contact" (click)="setActiveTab('contact')">Contact</button>
+        <button [class.active]="activeTab === 'privacy'" class="privacy" (click)="setActiveTab('privacy')">Privacy Policy</button>
       </div>
-      <p class="text-center">&copy; 2025 Your Company. All rights reserved.</p>
     </div>
+    <div><p class="copyrights">&copy; 2025 Your Company. All rights reserved.</p></div>
   </footer>
 </div>
 
@@ -93,8 +121,8 @@
         <input id="country" placeholder="Country" formControlName="country" type="text" />
       </div>
       <div class="form-actions">
-        <button type="submit" [disabled]="!editForm.get('userName')?.valid">Save Changes</button>
-        <button type="button" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="save-changes" [disabled]="!editForm.get('userName')?.valid">Save Changes</button>
+        <button type="button" class="close-changes" (click)="closeModal()">Cancel</button>
       </div>
     </form>
   </div>

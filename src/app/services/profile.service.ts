@@ -6,7 +6,7 @@ export interface User {
   userId: number;
   userName: string;
   password: string;
-  role: 'admin' | 'user';
+  role: 'Admin' | 'User';
   mobileNumber: string;
   address: string;
   pincode: string;

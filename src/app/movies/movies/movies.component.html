@@ -1,7 +1,7 @@
 <!-- Movies list -->
 <div class="released-movies">
   <h2 class="section-title">Released Movies</h2>
-  <div class="add-movie-btn">
+  <div class="add-movie-btn" [ngStyle]="{ marginTop: isAdmin ? '-72px' : '0px', position: 'relative' }">
     <button *ngIf="isAdmin" class="add-btn" (click)="openAddMovieModal()">Add new movie</button>
   </div>
 
@@ -15,7 +15,8 @@
 
   <div class="movies-grid" *ngIf="!loading && !error">
     <div class="movie-card" *ngFor="let movie of movies" (click)="showMovieDetails(movie)">
-      <img src="../../../assets/images/CinemaTicketPoster.jpg" alt="{{ movie.movieTitle }} Poster" width="20px" height="20px" class="movie-poster"/>
+      <!-- <img src="../../../assets/images/CinemaTicketPoster.jpg" alt="{{ movie.movieTitle }} Poster" width="20px" height="20px" class="movie-poster"/> -->
+      <img [src]="movie.poster" alt="{{ movie.movieTitle }}" class="movie-poster">
       <div class="movie-title"><span style="text-transform: uppercase;">{{ movie.movieTitle }}</span> - {{movie.duration}} mins</div>
       <div class="movie-genre">{{ movie.genre }}</div>
       <div class="movie-date">{{ movie.releaseDate | date: 'YYYY-MM-d' }}</div>
@@ -39,6 +40,14 @@
       <div class="form-group">
         <label for="genre">Genre:</label>
         <input class="show-area" id="genre" [(ngModel)]="newMovie.genre" name="genre" />
+      </div>
+      <div class="form-group">
+        <label for="release-date">Release Date:</label>
+        <input class="show-area" id="release-date" [(ngModel)]="newMovie.releaseDate" name="release-date" />
+      </div>
+      <div class="form-group">
+        <label for="movie-status">Movie Status:</label>
+        <input class="show-area" id="movie-status" [(ngModel)]="newMovie.movieStatus" name="movie-status" />
       </div>
       <div class="modal-actions">
         <button type="button" class="cancel-btn" (click)="closeAddMovieModal()">Cancel</button>

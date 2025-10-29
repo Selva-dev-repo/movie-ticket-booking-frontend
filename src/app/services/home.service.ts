@@ -8,7 +8,7 @@ export interface UpcomingMovies {
   movieTitle: string;
   duration: string;
   genre: string;
-  posterUrl: string;
+  poster: string;
   releaseDate: string;
   movieStatus: string;
 }

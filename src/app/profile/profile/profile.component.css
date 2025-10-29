@@ -45,22 +45,43 @@
     gap: 15px;
 }
 
+.about-footer {
+  margin: 50px;
+  display: flex;
+  justify-content: center;
+}
+
+.content {
+  line-height: 25px;
+}
+
 .footer {
     display: flex;
-    justify-content: space-evenly;
+    justify-content:center;
     align-items: center;
-    margin-top: 150px;
+    margin-top: 80px;
 }
 
 .options {
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
-    margin-top: 2px;
+    gap: 20px;
+    padding: 15px;
+    /* margin-top: 2px; */
 }
 
-.about, .contact, .policy {
-    padding: 15px;
+.about, .contact, .privacy {
+  font-size: 16px;
+  border: none;
+  background-color: transparent;
+}
+
+.copyrights {
+  display: flex;
+    justify-content:center;
+    align-items: center;
+    margin-top: 10px;
 }
 
 .error {
@@ -124,7 +145,17 @@
   justify-content: space-between;
 }
 
-button {
+.save-changes {
+  background-color: #28a745;
+  color: white;
+}
+
+.close-changes {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* button {
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
@@ -132,8 +163,7 @@ button {
 }
 
 button[type="submit"] {
-  background-color: #28a745;
-  color: white;
+  
 }
 
 button[type="submit"]:disabled {
@@ -142,6 +172,5 @@ button[type="submit"]:disabled {
 }
 
 button[type="button"] {
-  background-color: #dc3545;
-  color: white;
-}
+  
+} */

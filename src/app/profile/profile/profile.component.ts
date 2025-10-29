@@ -19,6 +19,7 @@ export class ProfileComponent implements OnInit {
   editForm: FormGroup;
   showModal: boolean = false;
   successMessage: string | null = null;
+  activeTab: string = 'about';
   errorMessage: string | null = null;
 
   constructor(
@@ -77,7 +78,7 @@ export class ProfileComponent implements OnInit {
       }
       this.profileService.getUser(userId).subscribe({
         next: (data) => {
-          console.log('User data received:', data);
+          // console.log('User data received:', data);
           if (data.userName || data.userId) {
             this.user = data;
             this.errorMessage = null;
@@ -182,6 +183,10 @@ export class ProfileComponent implements OnInit {
     } else {
       this.errorMessage = 'Please provide a valid username.';
     }
+  }
+
+  setActiveTab(tab: string): void {
+    this.activeTab = tab;
   }
 
   logout(): void {

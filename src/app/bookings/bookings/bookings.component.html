@@ -15,7 +15,8 @@
     <ul style="list-style: none; padding: 0;">
       <li *ngFor="let booking of bookings; let i = index" [attr.data-booking-id]="booking.bookingId">
         <div class="all-bookings" (click)="openModal(booking.bookingId)">
-          <p><strong>Movie:</strong> <span class="movie-title"> {{ booking.movieName || 'N/A' }}</span> - {{ booking.duration || 'N/A' }} min</p>
+          <p><strong>Movie:</strong> <span class="movie-title"> {{ booking.movieName || 'N/A' }}</span> - {{
+            booking.duration || 'N/A' }} min</p>
           <p><strong>Theatre:</strong> {{ booking.theatreName || 'N/A' }} - {{ booking.location || 'N/A' }}</p>
           <p><strong>Show Time:</strong> {{ booking.showDate }} / {{ booking.showTime || 'N/A' }}</p>
           <p><strong>Screen:</strong> {{ booking.screenNumber || 'N/A' }}</p>
@@ -32,21 +33,45 @@
   </div>
 
   <!-- View Ticket Modal -->
-   <div class="modal" *ngIf="showModal">
-  <div class="modal-content">
-    <div class="close"><button class="close-btn" (click)="closeModal()">✕</button></div>
+  <div class="modal" *ngIf="showModal" (click)="closeModal()" >
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="close"><button class="close-btn" (click)="closeModal()">✕</button></div>
 
-    <div *ngIf="loading">Loading booking details...</div>
+      <div *ngIf="loading">Loading booking details...</div>
 
-    <div *ngIf="!loading && selectedBooking" class="modal-ticket">
-      <p><strong>Movie: </strong> <span class="movie-name">{{ selectedBooking.movieName }}</span> - {{ selectedBooking.duration }} min</p>
-      <p><strong>Theatre:</strong> {{ selectedBooking.theatreName }} -  {{ selectedBooking.location }}</p>
-      <p><strong>Show Time:</strong> {{ selectedBooking.showDate }} at {{ selectedBooking.showTime }}</p>
-      <p><strong>Screen Number:</strong> {{ selectedBooking.screenNumber }}</p>
-      <p><strong>Seats:</strong> {{ selectedBooking.seatNumber }}</p>
-      <p><strong>Amount:</strong> ₹{{ selectedBooking.amount }} </p>
-      <p><strong>Booking Status: </strong> {{ selectedBooking.bookingStatus }} </p>
+      <div *ngIf="!loading && selectedBooking" class="modal-ticket">
+        <p><strong>Movie: </strong> <span class="movie-name">{{ selectedBooking.movieName }}</span> - {{
+          selectedBooking.duration }} min</p>
+        <p><strong>Theatre:</strong> {{ selectedBooking.theatreName }} - {{ selectedBooking.location }}</p>
+        <p><strong>Show Time:</strong> {{ selectedBooking.showDate }} at {{ selectedBooking.showTime }}</p>
+        <p><strong>Screen Number:</strong> {{ selectedBooking.screenNumber }}</p>
+        <p><strong>Seats:</strong> {{ selectedBooking.seatNumber }}</p>
+        <p><strong>Amount:</strong> ₹{{ selectedBooking.amount }} </p>
+        <p><strong>Booking Status: </strong> {{ selectedBooking.bookingStatus }} </p>
+        <button class="cancel-ticket" *ngIf="selectedBooking.bookingStatus !== 'Cancelled'"
+          (click)="openConfirmModal(selectedBooking.bookingId)">
+          Cancel Ticket
+        </button>
+        <!-- <button class="cancel-ticket" *ngIf="selectedBooking.bookingStatus != 'Cancelled'" (click)="cancelTicket()">Cancel Ticket</button> -->
+      </div>
     </div>
   </div>
-</div>
+
+  <!-- Cancel Confirmation Modal -->
+  <div class="cancel-modal" *ngIf="showConfirmModal" (click)="closeConfirmModal()">
+    <div class="cancel-modal-content confirm-modal" (click)="$event.stopPropagation()">
+      <p>Are you sure you want to cancel this ticket?</p>
+      <div class="confirm-buttons">
+        <button class="yes-btn" (click)="cancelTicket()">Yes, Cancel</button>
+        <button class="no-btn" (click)="closeConfirmModal()">No, Keep Booking</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ticket Cancel Modal -->
+   <div class="cancelled" *ngIf="cancelModal" (click)="closeCancelModal()">
+    <div class="modal-content-cancel" (click)="$event.stopPropagation()">
+      <p>Your ticket has been cancelled successfully</p>
+    </div>
+   </div>
 </div>

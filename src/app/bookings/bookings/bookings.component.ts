@@ -23,10 +23,16 @@ export class BookingsComponent implements OnInit {
   selectedBookingId: number | null = null;
   loading: boolean = true;
   showModal: boolean = false;
+  cancelModal: boolean = false;
+  showConfirmModal: boolean = false;
   userName: string = '';
   error: string | null = null;
 
-  constructor(private bookingService: BookingService, private authService: AuthService, private router: Router) {}
+  constructor(
+    private bookingService: BookingService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     const userName = this.authService.getUserName();
@@ -58,7 +64,7 @@ export class BookingsComponent implements OnInit {
     });
   }
 
-openModal(bookingId: number): void {
+  openModal(bookingId: number): void {
     this.showModal = true;
     this.loading = true;
     this.error = null;
@@ -67,24 +73,24 @@ openModal(bookingId: number): void {
     this.bookingService.getBookingById(bookingId).subscribe({
       next: (data: DisplayBooking) => {
         this.selectedBooking = {
-        bookingId: data.bookingId,
-        bookingStatus: data.bookingStatus,
-        seatNumber: data.seatNumber,
-        showDate: data.showDate,
-        showTime: data.showTime,
-        amount: data.amount,
-        movieName: data.movie?.movieTitle ?? '',
-        theatreName: data.theatre?.theatreName ?? '',
-        location: data.theatre?.location ?? '',
-        duration: data.movie?.duration ?? 0,
-        screenNumber: data.theatre?.screenNumber ?? '',
-      };
-      this.loading = false;
+          bookingId: data.bookingId,
+          bookingStatus: data.bookingStatus,
+          seatNumber: data.seatNumber,
+          showDate: data.showDate,
+          showTime: data.showTime,
+          amount: data.amount,
+          movieName: data.movie?.movieTitle ?? '',
+          theatreName: data.theatre?.theatreName ?? '',
+          location: data.theatre?.location ?? '',
+          duration: data.movie?.duration ?? 0,
+          screenNumber: data.theatre?.screenNumber ?? '',
+        };
+        this.loading = false;
       },
       error: (err) => {
         this.error = err.message || 'Failed to fetch booking.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -92,29 +98,54 @@ openModal(bookingId: number): void {
     this.showModal = false;
   }
 
-  openCancelModal(bookingId: number): void {
+  openConfirmModal(bookingId: number): void {
     this.selectedBookingId = bookingId;
-    this.showModal = true;
+    this.showConfirmModal = true;
   }
 
-  confirmCancel(confirm: boolean): void {
-    if (confirm && this.selectedBookingId) {
-      console.log(this.authService.getUserId());
-      
-        // this.bookingService.cancelBooking(this.selectedBookingId, this.authService.getUserById()).subscribe({
-        //     next: (booking: Booking) => {
-        //         alert('Ticket cancelled successfully!');
-        //         this.fetchBookings(); // Refresh bookings
-        //     },
-        //     error: (err) => {
-        //         console.error('Error cancelling booking:', err);
-        //         alert('Failed to cancel ticket: ' + (err.error || 'Unknown error'));
-        //     }
-        // });
-    }
-    this.showModal = false;
+  closeConfirmModal(): void {
+    this.showConfirmModal = false;
     this.selectedBookingId = null;
-}
+  }
+
+  cancelTicket(): void {
+    if (!this.selectedBooking) return;
+
+    const bookingId = this.selectedBooking.bookingId;
+    this.loading = true;
+    this.showConfirmModal = false;
+    this.error = null;
+
+    this.bookingService.cancelBooking(bookingId).subscribe({
+      next: (updatedBooking) => {
+        const index = this.bookings.findIndex((b) => b.bookingId === bookingId);
+        if (index !== -1) {
+          this.bookings[index].bookingStatus = 'Cancelled';
+        }
+
+        if (
+          this.selectedBooking &&
+          this.selectedBooking.bookingId === this.selectedBookingId
+        ) {
+          this.selectedBooking.bookingStatus = 'Cancelled';
+        }
+
+        this.loading = false;
+        this.cancelModal = true;
+        // alert('Your ticket has been cancelled successfully.');
+      },
+      error: (err) => {
+        this.error = err.message || 'Failed to cancel ticket.';
+        this.loading = false;
+        alert(this.error);
+      },
+    });
+  }
+
+  closeCancelModal(): void {
+    this.cancelModal = false;
+    this.selectedBookingId = null;
+  }
 
   logout(): void {
     this.bookings = [];

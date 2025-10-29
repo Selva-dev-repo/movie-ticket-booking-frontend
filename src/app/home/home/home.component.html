@@ -51,14 +51,33 @@
   <!-- Upcoming movies -->
   <h2 class="section-title">Upcoming Movies</h2>
   <div class="movies-grid">
-    <div class="movie-card" *ngFor="let movie of movies">
-      <!-- <img [src]="movie.posterUrl" alt="{{ movie.movieTitle }} Poster" width="20%" class="movie-poster"> -->
-      <img src="../../../assets/images/CinemaTicketPoster.jpg" alt="{{ movie.movieTitle }} Poster" width="50px"
-        height="50px" class="movie-poster" />
+    <div class="movie-card" *ngFor="let movie of movies" (click)="openMovieModal(movie)">
+      <img [src]="movie.poster" alt="{{ movie.movieTitle }} Poster" width="20%" class="movie-poster">
+      <!-- <img src="../../../assets/images/CinemaTicketPoster.jpg" alt="{{ movie.movieTitle }} Poster" width="50px" -->
+        <!-- height="50px" class="movie-poster" /> -->
       <div class="movie-title"><span style="text-transform: uppercase;">{{ movie.movieTitle }}</span> -
         {{movie.duration}} mins</div>
       <div class="movie-genre">{{ movie.genre }}</div>
       <div class="movie-date">Date of Release: {{ movie.releaseDate | date: 'YYYY-MM-d' }}</div>
+    </div>
+  </div>
+
+  <div class="modal" *ngIf="openModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <!-- <button class="close-modal" (click)="closeModal()">&times;</button> -->
+      <!-- <button class="close-btn" (click)="closeModal()">×</button> -->
+
+      <!-- Movie Details -->
+      <div *ngIf="selectedMovie">
+        <img [src]="selectedMovie.poster" alt="{{ selectedMovie.movieTitle }} Poster" class="modal-movie-poster">
+        <h2>{{ selectedMovie.movieTitle }} - {{selectedMovie.duration}} mins</h2>
+        <p *ngIf="selectedMovie.genre"><strong>Genre: </strong> {{ selectedMovie.genre }}</p>
+        <p><strong>Release Date: </strong> {{ selectedMovie.releaseDate }}</p>
+        <p><strong>Movie Status: </strong> {{ selectedMovie.movieStatus}}</p>
+      </div>
+
+      <p *ngIf="!selectedMovie && bookingError">{{ bookingError }}</p>
+      <p *ngIf="!selectedMovie && bookingLoading">Loading booking details...</p>
     </div>
   </div>
 </div>

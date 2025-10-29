@@ -19,6 +19,8 @@ export class HomeComponent implements OnInit {
   loading: boolean = true;
   bookingLoading: boolean = false;
   showModal: boolean = false;
+  openModal: boolean = false;
+  selectedMovie: UpcomingMovies | null = null;
   error: string = '';
   bookingError: string = '';
 
@@ -37,6 +39,8 @@ export class HomeComponent implements OnInit {
   upcomingMovies() {
     this.homeService.getUpcomingMovies().subscribe({
       next: (movies) => {
+        //console.log(movies);
+        
         this.movies = movies;
         // console.log(movies);
       },
@@ -56,6 +60,7 @@ export class HomeComponent implements OnInit {
       },
     });
   }
+
   fetchLatestBooking(): void {
     this.bookingLoading = true;
     this.bookingError = '';
@@ -93,7 +98,20 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  openMovieModal(movie: UpcomingMovies): void {
+    console.log("Movies get: " ,movie);
+    
+    this.selectedMovie = movie; // Set the selected movie
+    this.openModal = true; // Open the modal
+  }
+
   closeModal() {
     this.showModal = false;
+    this.openModal = false;
+    this.selectedMovie = null; 
   }
+
+  // closeModal() {
+  //   this.showModal = false;
+  // }
 }

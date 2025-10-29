@@ -29,6 +29,7 @@ export class AuthService {
       })
       .pipe(
         tap((response) => {
+          console.log(response);
           if (response.message === 'Login successful' && response.user && isPlatformBrowser(this.platformId)) {
             const mockToken = `mock-token-${response.user.userId}`;
             localStorage.setItem('token', mockToken);
@@ -83,9 +84,9 @@ export class AuthService {
     return null;
   }
 
-  getRole(): 'admin' | 'user' | null {
+  getRole(): 'Admin' | 'User' | null {
     if (isPlatformBrowser(this.platformId)) {
-      return localStorage.getItem('role') as 'admin' | 'user' | null;
+      return localStorage.getItem('role') as 'Admin' | 'User' | null;
     }
     return null;
   }

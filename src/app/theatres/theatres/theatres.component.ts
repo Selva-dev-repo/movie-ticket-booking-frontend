@@ -26,7 +26,8 @@ export class TheatresComponent implements OnInit {
   userId: number | null = this.authService.getUserId();
   userName: string | null = null;
   theaters: Theatre[] = [];
-  showModal = false;
+  showModal: boolean = false;
+  paymentModal: boolean = false;
   selectedTheater: Theatre | null = null;
   dates: string[] = [];
   selectedDate: string = '';
@@ -45,7 +46,7 @@ export class TheatresComponent implements OnInit {
     private authService: AuthService,
     private theaterService: TheatreService,
     private bookingService: BookingService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
@@ -138,7 +139,12 @@ export class TheatresComponent implements OnInit {
   }
 
   onSelectionChange(): void {
-    if (this.selectedDate && this.selectedShowtime && this.selectedTheater && this.movieId) {
+    if (
+      this.selectedDate &&
+      this.selectedShowtime &&
+      this.selectedTheater &&
+      this.movieId
+    ) {
       this.isLoading = true;
       this.errorMessage = '';
       this.generateSeatMap();
@@ -152,48 +158,84 @@ export class TheatresComponent implements OnInit {
   generateSeatMap() {
     const rows = 5;
     const cols = 4;
-    if (this.movieId && this.selectedTheater?.theatreId && this.selectedDate && this.selectedShowtime) {
+    const allSeatLabels = [
+      'A1',
+      'A2',
+      'A3',
+      'A4',
+      'B1',
+      'B2',
+      'B3',
+      'B4',
+      'C1',
+      'C2',
+      'C3',
+      'C4',
+      'D1',
+      'D2',
+      'D3',
+      'D4',
+      'E1',
+      'E2',
+      'E3',
+      'E4',
+    ];
+
+    if (
+      this.movieId &&
+      this.selectedTheater?.theatreId &&
+      this.selectedDate &&
+      this.selectedShowtime
+    ) {
       this.bookingService
         .checkSeatAvailability(
-          ['A1', 'A2', 'A3', 'A4', 'B1', 'B2', 'B3', 'B4', 'C1', 'C2', 'C3', 'C4', 'D1', 'D2', 'D3', 'D4', 'E1', 'E2', 'E3', 'E4'],
+          allSeatLabels,
           this.selectedTheater.theatreId,
           this.movieId,
           this.selectedDate,
           this.selectedShowtime
         )
         .subscribe({
-          next: (isAvailable) => {
+          next: (availability: boolean[]) => {
             this.seats = [];
-            for (let row = 0; row < rows; row++) {
-              for (let col = 0; col < cols; col++) {
-                const id = row * cols + col;
-                const label = String.fromCharCode(65 + row) + (col + 1);
-                this.seats.push({
-                  id,
-                  label,
-                  status: isAvailable && ![2, 7, 12, 18].includes(id) ? 'available' : 'unavailable',
-                });
-              }
+            for (let i = 0; i < allSeatLabels.length; i++) {
+              const row = Math.floor(i / cols);
+              const col = (i % cols) + 1;
+              const label = allSeatLabels[i];
+              const id = i;
+
+              this.seats.push({
+                id,
+                label,
+                status: availability[i] ? 'available' : 'unavailable',
+              });
             }
-            this.selectedSeats = this.seats.filter((s) => s.status === 'selected');
+            this.selectedSeats = this.seats.filter(
+              (s) => s.status === 'selected'
+            );
             this.isLoading = false;
           },
           error: (error) => {
             console.error('Error checking seat availability:', error);
+            // Fallback: all seats available
             this.seats = [];
-            for (let row = 0; row < rows; row++) {
-              for (let col = 0; col < cols; col++) {
-                const id = row * cols + col;
-                const label = String.fromCharCode(65 + row) + (col + 1);
-                this.seats.push({
-                  id,
-                  label,
-                  status: [2, 7, 12, 18].includes(id) ? 'unavailable' : 'available',
-                });
-              }
+            for (let i = 0; i < allSeatLabels.length; i++) {
+              const row = Math.floor(i / cols);
+              const col = (i % cols) + 1;
+              const label = allSeatLabels[i];
+              const id = i;
+
+              this.seats.push({
+                id,
+                label,
+                status: 'available',
+              });
             }
-            this.selectedSeats = this.seats.filter((s) => s.status === 'selected');
-            this.errorMessage = 'Failed to load seat availability. Using default layout.';
+            this.selectedSeats = this.seats.filter(
+              (s) => s.status === 'selected'
+            );
+            this.errorMessage =
+              'Failed to load seat availability. All seats shown as available.';
             this.isLoading = false;
           },
         });
@@ -227,7 +269,9 @@ export class TheatresComponent implements OnInit {
 
   proceedToPayment() {
     if (this.isPayNowEnabled()) {
-      const seatNumbers = this.selectedSeats.map((seat) => seat.label).join(', ');
+      const seatNumbers = this.selectedSeats
+        .map((seat) => seat.label)
+        .join(', ');
       const booking: SaveBooking = {
         bookingStatus: 'Confirmed',
         showDate: this.selectedDate,
@@ -243,15 +287,10 @@ export class TheatresComponent implements OnInit {
         next: (savedBooking) => {
           console.log('Booking saved successfully:', savedBooking);
           alert(
-            `Payment successful for ${
-              this.selectedSeats.length
-            } seats at $${
-              this.totalAmount
-            }.\n\nSeats: ${seatNumbers}\nMovie: ${this.movieName}\nTheater: ${
-              this.selectedTheater?.theatreName
-            }\nDate: ${this.selectedDate}\nShowtime: ${this.selectedShowtime}`
+            `Payment successful for ${this.selectedSeats.length} seats at $${this.totalAmount}.\n\nSeats: ${seatNumbers}\nMovie: ${this.movieName}\nTheater: ${this.selectedTheater?.theatreName}\nDate: ${this.selectedDate}\nShowtime: ${this.selectedShowtime}`
           );
-          this.closeModal(); // Close modal immediately after successful booking
+          // this.paymentModal = true;
+          this.closeModal(); 
         },
         error: (err) => {
           console.error('Error saving booking:', {
@@ -274,9 +313,14 @@ export class TheatresComponent implements OnInit {
         date: this.selectedDate,
         showtime: this.selectedShowtime,
       });
-      this.errorMessage = 'Please select a date, showtime, seats, a theater, a movie, and ensure you are logged in.';
+      this.errorMessage =
+        'Please select a date, showtime, seats, a theater, a movie, and ensure you are logged in.';
       alert(this.errorMessage);
     }
+  }
+
+  closePaymentModal(): void {
+    this.paymentModal = false;
   }
 
   backToDetails(): void {
