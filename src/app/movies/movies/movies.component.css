@@ -20,7 +20,7 @@
 }
 
 .add-btn {
-  padding: 0.5rem 1rem;
+  padding: 0.65rem 1rem;
   background: #007bff;
   /* background-color: #0578f4; */
   color: white;
@@ -127,7 +127,6 @@
   width: 90%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   animation: fadeIn 0.3s ease-in;
-  /* Optional animation */
 }
 
 .form-group {
@@ -143,11 +142,26 @@
 }
 
 .show-area {
-  margin-left: 10px;
+  margin-left: 15px;
+}
+
+.genre {
+  margin-left: 51px;
+}
+
+.poster {
+  margin-left: 51px;
+}
+
+.release, .status {
+  margin-left: 4px;
 }
 
 .modal-actions {
-  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
 }
 
 .cancel-btn {
@@ -168,7 +182,7 @@
 }
 
 .modal-content {
-  background: white;
+  background: rgb(238, 254, 181);
   padding: 20px;
   border-radius: 8px;
   text-align: center;
@@ -176,7 +190,6 @@
   width: 90%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   animation: fadeIn 0.3s ease-in;
-  /* Optional animation */
 }
 
 button {
@@ -196,4 +209,11 @@ button {
 .close {
   background-color: #ff0000;
   color: white;
+}
+
+.movie-name {
+  font-weight: bold;
+  color: #d32f2f;
+  margin: 8px 0;
+  font-size: 1.1rem;
 }

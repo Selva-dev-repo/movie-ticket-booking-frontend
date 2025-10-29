@@ -83,20 +83,44 @@ export class BookingService {
   private bookingsSubject = new BehaviorSubject<Booking[]>([]);
   bookings$ = this.bookingsSubject.asObservable();
 
+  // getBookings(): Observable<Booking[]> {
+  //   const userId = this.authService.getUserId();
+  //   if (!isPlatformBrowser(this.platformId) || !userId) {
+  //     return throwError(
+  //       () => new Error('User not authenticated or not in browser environment')
+  //     );
+  //   }
+  //   const token = localStorage.getItem('token');
+  //   if (!userId || !token) {
+  //     return throwError(() => new Error('User not authenticated'));
+  //   }
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${token}`,
+  //   });
+  //   return this.http
+  //     .get<Booking[]>(`${this.apiUrl}/user/${userId}`, { headers })
+  //     .pipe(
+  //       tap((bookings) => this.bookingsSubject.next(bookings)),
+  //       catchError(this.handleError)
+  //     );
+  // }
+
   getBookings(): Observable<Booking[]> {
     const userId = this.authService.getUserId();
-    if (!isPlatformBrowser(this.platformId) || !userId) {
-      return throwError(
-        () => new Error('User not authenticated or not in browser environment')
-      );
-    }
-    const token = localStorage.getItem('token');
-    if (!userId || !token) {
+
+    if (!userId) {
       return throwError(() => new Error('User not authenticated'));
     }
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return throwError(() => new Error('User not authenticated'));
+    }
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
+
     return this.http
       .get<Booking[]>(`${this.apiUrl}/user/${userId}`, { headers })
       .pipe(
@@ -348,10 +372,8 @@ export class BookingService {
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'An error occurred while fetching bookings.';
     if (error.error instanceof ErrorEvent) {
-      // Client-side error
       errorMessage = `Error: ${error.error.message}`;
     } else {
-      // Server-side error
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
     return throwError(() => new Error(errorMessage));

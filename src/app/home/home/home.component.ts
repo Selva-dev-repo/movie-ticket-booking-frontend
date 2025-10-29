@@ -66,9 +66,14 @@ export class HomeComponent implements OnInit {
     this.bookingError = '';
     this.bookingService.showBookings().subscribe({
       next: (bookings) => {
-        this.latestBooking =
-          bookings.sort((a, b) => b.bookingId - a.bookingId)[0] || null;
+        const sortedBooking = bookings.sort((a, b) => b.bookingId - a.bookingId);
+        // const bookingConfirmed = sortedBooking.filter(b => b.bookingStatus === "Confirmed");
+        // this.latestBooking =
+        //   (bookings.sort((a, b) => b.bookingId - a.bookingId)[0] || null) && bookings.filter(b => b.bookingStatus === 'Confirmed');
         // console.log('Latest booking fetched:', this.latestBooking);
+        // console.log("Latest fetched booking: ", sortedBooking);
+        this.latestBooking = sortedBooking[0] || null;
+        
         this.bookingLoading = false;
       },
       error: (err) => {

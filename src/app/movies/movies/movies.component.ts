@@ -22,10 +22,31 @@ export class MoviesComponent implements OnInit {
   userName: string = '';
   isAdmin: boolean = false;
   showAddMovieModal: boolean = false;
-  newMovie: AddMovie = { movieTitle: '', duration: 0, genre: '', poster: '', releaseDate: '', movieStatus: '' };
+  newMovie: AddMovie = {
+    movieTitle: '',
+    duration: 0,
+    genre: '',
+    poster: '',
+    releaseDate: '',
+    movieStatus: '',
+  };
+  editMode: boolean = false;
+  editMovieData: AddMovie = {
+    movieTitle: '',
+    duration: 0,
+    genre: '',
+    poster: '',
+    releaseDate: '',
+    movieStatus: '',
+  };
   error = '';
 
-  constructor(private movieService: MovieService, private homeService: HomeService, private authService: AuthService, private router: Router) {}
+  constructor(
+    private movieService: MovieService,
+    private homeService: HomeService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     const userName = this.authService.getUserName();
@@ -68,12 +89,19 @@ export class MoviesComponent implements OnInit {
         console.error('Error fetching released movies:', error);
         this.error = 'Failed to load released movies. Please try again.';
         this.loading = false;
-      }
+      },
     });
   }
 
   openAddMovieModal() {
-    this.newMovie = { movieTitle: '', duration: 0, genre: '', poster: '', releaseDate: '', movieStatus: '' };
+    this.newMovie = {
+      movieTitle: '',
+      duration: 0,
+      genre: '',
+      poster: '',
+      releaseDate: '',
+      movieStatus: '',
+    };
     this.showAddMovieModal = true;
   }
 
@@ -84,7 +112,11 @@ export class MoviesComponent implements OnInit {
   addMovie() {
     // console.log('Submitting movie:', this.newMovie);
     this.error = '';
-    if (!this.newMovie.movieTitle || !this.newMovie.duration || !this.newMovie.genre) {
+    if (
+      !this.newMovie.movieTitle ||
+      !this.newMovie.duration ||
+      !this.newMovie.genre
+    ) {
       this.error = 'All fields are required';
       return;
     }
@@ -97,13 +129,43 @@ export class MoviesComponent implements OnInit {
       error: (error) => {
         console.error('Error adding movie:', error);
         this.error = error.error?.message || 'Failed to add movie';
-      }
+      },
     });
+  }
+
+  openEditMovieModal(movie: Movie) {
+    this.editMode = true;
+    this.showAddMovieModal = true;
+    this.newMovie = {
+      movieTitle: movie.movieTitle,
+      duration: Number(movie.duration),
+      genre: movie.genre,
+      poster: movie.poster,
+      releaseDate: movie.releaseDate,
+      movieStatus: movie.movieStatus,
+    };
+  }
+
+  saveEditedMovie() {
+    if (!this.selectedMovie) return;
+    this.movieService
+      .updateMovie(this.selectedMovie.movieId, this.newMovie)
+      .subscribe({
+        next: () => {
+          this.editMode = false;
+          this.closeAddMovieModal();
+          this.releasedMovies();
+        },
+        error: (error) => {
+          console.error('Error updating movie:', error);
+          this.error = error.error?.message || 'Failed to update movie';
+        },
+      });
   }
 
   showMovieDetails(movie: Movie) {
     // console.log(movie);
-    
+
     this.selectedMovie = movie;
   }
 
@@ -114,6 +176,8 @@ export class MoviesComponent implements OnInit {
   bookTicket(movie: Movie): void {
     this.selectedMovie = null;
     console.log(`Movies: ${movie.movieId}`);
-    this.router.navigate(['/theatres'], { queryParams: { movieId: movie.movieId, movieName: movie.movieTitle } });
+    this.router.navigate(['/theatres'], {
+      queryParams: { movieId: movie.movieId, movieName: movie.movieTitle },
+    });
   }
 }

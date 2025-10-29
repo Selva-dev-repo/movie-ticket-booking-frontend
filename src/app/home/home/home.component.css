@@ -23,7 +23,7 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   text-align: center;
-  padding: 15px 0px;
+  padding: 10px 0px 25px 0px;
   transition: transform 0.2s ease;
 }
 
@@ -41,7 +41,7 @@
 
 .modal-movie-poster {
   margin-top: -10px;
-  width: 40%;
+  width: 50%;
   height: 10%;
   object-fit: cover;
 }
