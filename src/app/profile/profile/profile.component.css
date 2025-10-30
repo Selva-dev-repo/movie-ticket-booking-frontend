@@ -1,7 +1,8 @@
 .profile-container {
     max-width: 1200px;
     margin: 2rem auto;
-    padding: 0 1rem;
+    /* padding: 2rem 1rem; */
+    padding-bottom: 180px;
 }
 
 .profile-heading {
@@ -19,22 +20,12 @@
 .edit-btn {
     margin-left: -5px;
     padding: 10px;
-    background-color: aqua;
+    /* background-color: aqua; */
+    background-color: #0381FE;
     font-size: 12px;
     font-weight: 700;
-    color: brown;
-    border: 1px solid aqua;
-    border-radius: 10px;
-}
-
-.logout-btn {
-    margin-left: -5px;
-    padding: 10px;
-    background-color: red;
-    font-size: 12px;
-    font-weight: 700;
-    color: yellow;
-    border: 1px solid red;
+    color: #F3F4F6;
+    border: 1px solid #0381FE;
     border-radius: 10px;
 }
 
@@ -53,35 +44,56 @@
 
 .content {
   line-height: 25px;
+  margin-bottom: 80px;
+  /* position: fixed; */
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  /* height: 40px; */
+  background-color: #415570;
+  color: white;
+  padding: 5px  0;
+  text-align: center;
+  z-index: 100;
 }
 
 .footer {
-    display: flex;
-    justify-content:center;
-    align-items: center;
-    margin-top: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .options {
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-    gap: 20px;
-    padding: 15px;
-    /* margin-top: 2px; */
+  display: flex;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .about, .contact, .privacy {
   font-size: 16px;
   border: none;
   background-color: transparent;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.about:hover, .contact:hover, .privacy:hover {
+  background-color: lightgrey;
+  border-radius: 5px;
+  padding: 5px;
 }
 
 .copyrights {
-  display: flex;
-    justify-content:center;
-    align-items: center;
-    margin-top: 10px;
+  margin-top: 5px;
+  font-size: 14px;
+  color: #d1d5db;
 }
 
 .error {

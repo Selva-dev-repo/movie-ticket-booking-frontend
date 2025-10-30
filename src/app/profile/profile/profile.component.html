@@ -23,10 +23,7 @@
       <div class="profile-buttons">
         <button (click)="editProfile()" class="edit-btn">
           Edit Profile
-        </button>
-        <button (click)="logout()" class="logout-btn">
-          Logout
-        </button>
+        </button>    
       </div>
     </div>
     <ng-template #loading>
@@ -61,17 +58,18 @@
     </div>
   </div>
   
-  <footer class="bg-gray-800 text-white py-4">
+  <!-- <footer class="bg-gray-800 text-white py-4"> -->
     <div class="footer">
       <div class="options">
         <button [class.active]="activeTab === 'about'" class="about" (click)="setActiveTab('about')">About</button>
         <button [class.active]="activeTab === 'contact'" class="contact" (click)="setActiveTab('contact')">Contact</button>
         <button [class.active]="activeTab === 'privacy'" class="privacy" (click)="setActiveTab('privacy')">Privacy Policy</button>
       </div>
-    </div>
-    <div><p class="copyrights">&copy; 2025 Your Company. All rights reserved.</p></div>
-  </footer>
+    </div>  
+  <!-- </footer> -->
 </div>
+
+<footer><p class="copyrights"> Movie Ticket Booking &copy; 2025 | All rights reserved.</p></footer>
 
 <!-- Edit profile form -->
  <div *ngIf="showModal" class="modal">

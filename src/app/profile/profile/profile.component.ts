@@ -18,6 +18,7 @@ export class ProfileComponent implements OnInit {
   user: User | null = null;
   editForm: FormGroup;
   showModal: boolean = false;
+  logoutModal: boolean = false;
   successMessage: string | null = null;
   activeTab: string = 'about';
   errorMessage: string | null = null;
@@ -187,9 +188,5 @@ export class ProfileComponent implements OnInit {
 
   setActiveTab(tab: string): void {
     this.activeTab = tab;
-  }
-
-  logout(): void {
-    this.authService.logout();
   }
 }

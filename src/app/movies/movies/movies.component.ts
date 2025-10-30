@@ -164,8 +164,6 @@ export class MoviesComponent implements OnInit {
   }
 
   showMovieDetails(movie: Movie) {
-    // console.log(movie);
-
     this.selectedMovie = movie;
   }
 

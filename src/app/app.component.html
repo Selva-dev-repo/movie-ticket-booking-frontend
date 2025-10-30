@@ -194,4 +194,21 @@
     <a routerLink="/bookings" routerLinkActive="active" class="booking">Bookings</a>
     <a routerLink="/profile" routerLinkActive="active" class="profile">Profile</a>
   </div>
+
+  <div *ngIf="loggedIn">
+    <button (click)="openLogoutModal()" class="logout-btn">
+      Logout
+    </button>
+  </div>
 </nav>
+
+<div class="logout-modal" *ngIf="logoutModal">
+  <div class="logout-modal-content">
+    <p class="logout">Are you sure you want to logout?</p>
+    <div class="buttons">
+      <button class="confirm-btn" (click)="logout()">Yes, Logout</button>
+      <button class="cancel-btn" (click)="closeLogoutModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+

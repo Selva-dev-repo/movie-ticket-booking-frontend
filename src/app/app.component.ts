@@ -18,8 +18,9 @@ export class AppComponent implements OnInit {
   title = "ticket-booking-app"
   loggedIn = false;
   isMenuOpen = false;
+  logoutModal: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit() {
     if (typeof window !== 'undefined') {
@@ -40,11 +41,24 @@ export class AppComponent implements OnInit {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
-  logout() {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('token');
-    }
-    this.loggedIn = false;
-    this.router.navigate([' ']);
+  openLogoutModal(): void {
+    this.logoutModal = true;
   }
+
+  closeLogoutModal(): void {
+    this.logoutModal = false;
+  }
+
+  logout(): void {
+    this.logoutModal = false;
+    this.authService.logout();
+  }
+
+  // logout() {
+  //   if (typeof window !== 'undefined') {
+  //     localStorage.removeItem('token');
+  //   }
+  //   this.loggedIn = false;
+  //   this.router.navigate([' ']);
+  // }
 }
