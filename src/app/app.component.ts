@@ -19,12 +19,16 @@ export class AppComponent implements OnInit {
   loggedIn = false;
   isMenuOpen = false;
   logoutModal: boolean = false;
+  userRole: 'Admin' | 'User' | null = null;
 
   constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit() {
     if (typeof window !== 'undefined') {
+      // this.loggedIn = !!localStorage.getItem('token');
       this.loggedIn = !!localStorage.getItem('token');
+      this.userRole = this.authService.getRole();
+      console.log('Logged in as:', this.userRole);
     }
 
     this.router.events.subscribe(() => {
@@ -33,6 +37,7 @@ export class AppComponent implements OnInit {
         this.loggedIn = false;
       } else if (typeof window !== 'undefined') {
         this.loggedIn = !!localStorage.getItem('token');
+        this.userRole = this.authService.getRole();
       }
     });
   }

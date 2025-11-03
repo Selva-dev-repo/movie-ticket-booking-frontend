@@ -1,11 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Theatre, TheatreService } from '../../services/theatre.service';
+import {
+  AddTheatre,
+  Theatre,
+  TheatreService,
+} from '../../services/theatre.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Movie, MovieService } from '../../services/movie.service';
 import { BookingService, SaveBooking } from '../../services/booking.service';
 import { AuthService } from '../../services/auth.service';
+import { FormsModule } from '@angular/forms';
 
 interface Seat {
   id: number;
@@ -16,7 +21,7 @@ interface Seat {
 @Component({
   selector: 'app-theatres',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule, FormsModule],
   templateUrl: './theatres.component.html',
   styleUrl: './theatres.component.css',
 })
@@ -37,6 +42,10 @@ export class TheatresComponent implements OnInit {
   selectedSeats: Seat[] = [];
   pricePerSeat = 120;
   isLoading: boolean = false;
+  role: string | null = this.authService.getRole();
+  showAddForm: boolean = false;
+  // addedTheatre: boolean = false;
+  newTheatre: AddTheatre = { theatreName: '', location: '', screenNumber: '' };
   errorMessage: string = '';
 
   constructor(
@@ -49,6 +58,13 @@ export class TheatresComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.role = this.authService.getRole();
+    console.log(this.role);
+
+    if (this.role === 'Admin') {
+      this.fetchAllTheatres();
+      return;
+    }
     this.route.queryParams.subscribe((params) => {
       this.movieId = params['movieId'] ? Number(params['movieId']) : null;
       this.movieName = params['movieName']
@@ -78,6 +94,24 @@ export class TheatresComponent implements OnInit {
     });
   }
 
+  private fetchAllTheatres(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.theaterService.getTheaters().subscribe({
+      next: (data: Theatre[]) => {
+        this.theaters = data;
+        this.movieName = 'All Theatres';
+        this.isLoading = false;
+      },
+      error: (error: any) => {
+        console.error('Error fetching all theatres:', error);
+        this.errorMessage = 'Failed to load theatres. Please try again.';
+        this.isLoading = false;
+      },
+    });
+  }
+
   private fetchTheatres(movieId: number, movieName: string): void {
     this.isLoading = true;
     this.errorMessage = '';
@@ -93,6 +127,51 @@ export class TheatresComponent implements OnInit {
       },
     });
   }
+
+  addTheatre(): void {
+    if (
+      !this.newTheatre.theatreName ||
+      !this.newTheatre.location ||
+      !this.newTheatre.screenNumber
+    ) {
+      alert('Please fill all the fields before adding a theatre.');
+      return;
+    }
+
+    this.theaterService.addTheatre(this.newTheatre).subscribe({
+      next: (response) => {
+        console.log('Theatre added successfully', response);
+        alert('Theatre added successfully!');
+        // this.addedTheatre = true; 
+        // setTimeout(() => {
+        //   this.addedTheatre = false;
+        // }, 5000);
+        this.fetchAllTheatres();
+        this.newTheatre = { theatreName: '', location: '', screenNumber: '' };
+        this.closeTheatreModal();
+      },
+      error: (err) => {
+        console.error('Error adding theatre:', err);
+        alert('Failed to add theatre. Please try again.');
+      },
+    });
+  }
+
+  showAddTheatre() {
+    this.showAddForm = true;
+  }
+
+  closeTheatreModal() {
+    this.showAddForm = false;
+  }
+
+  // openAddedTheatre() {
+  //   this.addedTheatre = true;
+  // }
+
+  // closeAddedTheatre() {
+  //   this.addedTheatre = false;
+  // }
 
   openSeatModal(theater: Theatre) {
     console.log(
@@ -290,7 +369,7 @@ export class TheatresComponent implements OnInit {
             `Payment successful for ${this.selectedSeats.length} seats at $${this.totalAmount}.\n\nSeats: ${seatNumbers}\nMovie: ${this.movieName}\nTheater: ${this.selectedTheater?.theatreName}\nDate: ${this.selectedDate}\nShowtime: ${this.selectedShowtime}`
           );
           // this.paymentModal = true;
-          this.closeModal(); 
+          this.closeModal();
         },
         error: (err) => {
           console.error('Error saving booking:', {

@@ -36,13 +36,53 @@ export class HomeComponent implements OnInit {
     this.fetchLatestBooking();
   }
 
+  // upcomingMovies() {
+  //   this.homeService.getUpcomingMovies().subscribe({
+  //     next: (movies) => {
+  //       //console.log(movies);
+
+  //       this.movies = movies;
+  //       // console.log(movies);
+  //     },
+  //     error: (err) => {
+  //       console.error('Error fetching movies:', err);
+  //     },
+  //   });
+  // }
+
   upcomingMovies() {
     this.homeService.getUpcomingMovies().subscribe({
       next: (movies) => {
-        //console.log(movies);
-        
+        const today = new Date();
         this.movies = movies;
-        // console.log(movies);
+
+        movies.forEach((movie) => {
+          const releaseDate = new Date(movie.releaseDate);
+
+          if (releaseDate <= today && movie.movieStatus !== 'Released') {
+            const updatedMovie = {
+              movieTitle: movie.movieTitle,
+              duration: Number(movie.duration),
+              genre: movie.genre,
+              poster: movie.poster,
+              releaseDate: movie.releaseDate,
+              movieStatus: 'Released',
+            };
+            this.homeService
+              .updateMovieStatus(movie.movieId, updatedMovie)
+              .subscribe({
+                next: () => {
+                  console.log(`Updated ${movie.movieTitle} to Released`);
+                },
+                error: (err) => {
+                  console.error(
+                    `Error updating movie ${movie.movieId}:`,
+                    err
+                  );
+                },
+              });
+          }
+        });
       },
       error: (err) => {
         console.error('Error fetching movies:', err);
@@ -66,14 +106,16 @@ export class HomeComponent implements OnInit {
     this.bookingError = '';
     this.bookingService.showBookings().subscribe({
       next: (bookings) => {
-        const sortedBooking = bookings.sort((a, b) => b.bookingId - a.bookingId);
+        const sortedBooking = bookings.sort(
+          (a, b) => b.bookingId - a.bookingId
+        );
         // const bookingConfirmed = sortedBooking.filter(b => b.bookingStatus === "Confirmed");
         // this.latestBooking =
         //   (bookings.sort((a, b) => b.bookingId - a.bookingId)[0] || null) && bookings.filter(b => b.bookingStatus === 'Confirmed');
         // console.log('Latest booking fetched:', this.latestBooking);
         // console.log("Latest fetched booking: ", sortedBooking);
         this.latestBooking = sortedBooking[0] || null;
-        
+
         this.bookingLoading = false;
       },
       error: (err) => {
@@ -104,8 +146,8 @@ export class HomeComponent implements OnInit {
   }
 
   openMovieModal(movie: UpcomingMovies): void {
-    console.log("Movies get: " ,movie);
-    
+    console.log('Movies get: ', movie);
+
     this.selectedMovie = movie; // Set the selected movie
     this.openModal = true; // Open the modal
   }
@@ -113,7 +155,7 @@ export class HomeComponent implements OnInit {
   closeModal() {
     this.showModal = false;
     this.openModal = false;
-    this.selectedMovie = null; 
+    this.selectedMovie = null;
   }
 
   // closeModal() {

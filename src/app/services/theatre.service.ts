@@ -9,6 +9,12 @@ export interface Theatre {
   screenNumber: string;
 }
 
+export interface AddTheatre {
+  theatreName: string;
+  location: string;
+  screenNumber: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -28,6 +34,10 @@ export class TheatreService {
       this.apiUrl
     }/theatres?movieId=${movieId}&movieName=${encodeURIComponent(movieName.toString())}`;
     return this.http.get<Theatre[]>(url).pipe(catchError(this.handleError));
+  }
+
+  addTheatre(theatre: AddTheatre): Observable<Theatre> {
+    return this.http.post<Theatre>(`${this.apiUrl}/theatres`, theatre);
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {

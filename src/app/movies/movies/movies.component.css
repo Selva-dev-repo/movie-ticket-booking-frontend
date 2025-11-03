@@ -135,26 +135,26 @@
 
 .title-area {
   margin-left: 10px;
+  width: 80%;
+  padding: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
 }
 
 .duration-area {
-  margin-left: 30px;
+  margin-left: 15px;
+  width: 80%;
+  padding: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
 }
 
 .show-area {
   margin-left: 15px;
-}
-
-.genre {
-  margin-left: 51px;
-}
-
-.poster {
-  margin-left: 51px;
-}
-
-.release, .status {
-  margin-left: 4px;
+  width: 80%;
+  padding: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
 }
 
 .modal-actions {

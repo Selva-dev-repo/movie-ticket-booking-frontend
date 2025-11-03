@@ -191,7 +191,14 @@
   <div *ngIf="loggedIn" class="navbar-menu" [class.open]="isMenuOpen">
     <a routerLink="/home" routerLinkActive="active" class="home">Home</a>
     <a routerLink="/movies" routerLinkActive="active" class="movie">Movies</a>
-    <a routerLink="/bookings" routerLinkActive="active" class="booking">Bookings</a>
+    <!-- <a routerLink="/bookings" routerLinkActive="active" class="booking">Bookings</a> -->
+    <ng-container *ngIf="userRole === 'User'">
+      <a routerLink="/bookings" routerLinkActive="active" class="booking">Bookings</a>
+    </ng-container>
+    
+    <ng-container *ngIf="userRole === 'Admin'">
+      <a routerLink="/theatres" routerLinkActive="active" class="booking">Theatres</a>
+    </ng-container>
     <a routerLink="/profile" routerLinkActive="active" class="profile">Profile</a>
   </div>
 

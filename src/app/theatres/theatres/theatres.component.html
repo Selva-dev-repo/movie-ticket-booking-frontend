@@ -68,18 +68,26 @@
   <div *ngIf="isLoading" class="loading">Loading theaters...</div>
   <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
 
+  <div *ngIf="role === 'Admin'" class="admin-actions"
+    [ngStyle]="{ marginTop: role ? '-52px' : '0px', position: 'relative' }">
+    <button (click)="showAddTheatre()" class="add-theatre">
+      <!-- {{ showAddForm ? 'Cancel' : 'Add New Theatre' }} -->
+        Add new theatre 
+    </button>
+  </div>
+
   <div *ngIf="!isLoading && !errorMessage && theaters.length > 0" class="theaters-grid">
     <div *ngFor="let theater of theaters" class="theater-card">
       <h3 class="theatre-name">{{ theater.theatreName }} - {{ theater.location }}</h3>
       <p class="screenno">Screen: {{ theater.screenNumber }}</p>
-      <button class="booking" (click)="openSeatModal(theater)">Book Now</button>
+      <button class="booking" *ngIf="role !== 'Admin'" (click)="openSeatModal(theater)">Book Now</button>
     </div>
   </div>
 
   <button (click)="backToDetails()" class="back-btn">Back to Movie Details</button>
 </div>
 
-<!-- ✅ Seat Selection Modal -->
+<!-- Seat Selection Modal -->
 <div class="modal" [class.active]="showModal" (click)="closeModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <button class="close-btn" (click)="closeModal()">×</button>
@@ -161,3 +169,57 @@
  </div>
 
 
+<!-- ✅ Add Theatre Form -->
+<!-- <div *ngIf="showAddForm" class="add-theatre-modal">
+  <h3>Add New Theatre</h3>
+
+    <input
+      type="text"
+      [(ngModel)]="newTheatre.theatreName"
+      placeholder="Enter theatre name"
+    />
+
+    <input
+      type="text"
+      [(ngModel)]="newTheatre.location"
+      placeholder="Enter location"
+    />
+
+    <input
+      type="text"
+      [(ngModel)]="newTheatre.screenNumber"
+      placeholder="Enter screen number"
+    />
+
+
+</div> -->
+<div *ngIf="showAddForm" class="add-theatre-modal" (click)="closeTheatreModal()">
+  <div class="modal-content-movie" (click)="$event.stopPropagation()">
+    <form (ngSubmit)="addTheatre()">
+      <h2>Add New Theatre</h2>
+      <div class="form-group">
+        <input class="show-area" id="theatreName" [(ngModel)]="newTheatre.theatreName" name="theatreName"
+          placeholder="Enter Theatre Name" required />
+      </div>
+
+      <div class="form-group">
+        <input class="show-area" id="location" [(ngModel)]="newTheatre.location" placeholder="Enter Location"
+          name="location" required />
+      </div>
+
+      <div class="form-group">
+        <input class="show-area " id="screenNumber" [(ngModel)]="newTheatre.screenNumber"
+          placeholder="Enter Screen Number" name="screenNumber" />
+      </div>
+
+      <button type="submit" class="submit">Add Theatre</button>
+      <button type="button" (click)="closeTheatreModal()" class="cancel">Cancel</button>
+    </form>
+  </div>
+</div>
+
+<!-- <div class="added-modal" *ngIf="addedTheatre" (click)="addedTheatre = false">
+  <div class="added-modal-content" (click)="$event.stopPropagation()">
+    <h5>Theatre added successfully!</h5>
+  </div>
+</div> -->

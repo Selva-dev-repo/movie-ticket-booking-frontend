@@ -1,7 +1,7 @@
 .theater-list {
-  padding: 20px;
+  padding: 39px 142px;
   /* max-width: 800px; */
-  margin: 20px;
+  margin: 20px 20px;
 }
 
 .movie-name {
@@ -238,4 +238,101 @@
 
 .pay-btn:hover:not(:disabled) {
   background-color: #45a049;
+}
+
+.admin-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.7rem; 
+}
+
+.add-theatre {
+  padding: 0.65rem 1rem;
+  margin-top: -8px;
+  background: #007bff;
+  /* background-color: #0578f4; */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.add-theatre-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal-content-movie {
+  background: rgb(235, 230, 230);
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in;
+}
+
+.form-group {
+  margin-top: 15px;
+}
+
+.show-area {
+  margin-left: 15px;
+  padding: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+  /* background-color: rgb(164, 255, 220); */
+  width: 80%;
+}
+
+.submit {
+  margin-top: 20px;
+  margin-right: 20px;
+  padding: 0.65rem 1rem;
+  color: white;
+  font-size: 1rem;
+  background-color: #007bff;
+  border: 1px solid #007bff;
+  border-radius: 5px;
+}
+
+.cancel {
+  background-color: red;
+  border: 1px solid red;
+  padding: 0.65rem 1rem;
+  color: white;
+  font-size: 1rem;
+  border-radius: 5px;
+}
+
+.added-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.added-modal-content {
+  background: rgb(197, 251, 149);
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 600px;
+  width: 90%;
+  position: relative;
 }

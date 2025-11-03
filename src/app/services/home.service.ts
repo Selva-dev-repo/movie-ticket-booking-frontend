@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DisplayBooking } from './booking.service';
@@ -27,6 +27,16 @@ export class HomeService {
   getReleasedMovies(): Observable<UpcomingMovies[]> {
     return this.http.get<UpcomingMovies[]>(`${this.apiUrl}/movies/released`);
   }
+
+  updateMovieStatus(movieId: number, updatedMovie: any): Observable<any> {
+  const token = localStorage.getItem('token');
+  const headers = token
+    ? { headers: new HttpHeaders({ 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }) }
+    : {};
+
+  return this.http.put(`${this.apiUrl}/movies/${movieId}`, updatedMovie, headers);
+}
+
 
   getTickets(): Observable<DisplayBooking[]> {
     return this.http.get<DisplayBooking[]>(`${this.apiUrl}/bookings`);
