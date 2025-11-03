@@ -217,3 +217,10 @@ button {
   margin: 8px 0;
   font-size: 1.1rem;
 }
+
+.modal-movie-poster {
+  margin-top: 20px;
+  width: 55%;
+  height: 25%;
+  object-fit: cover;
+}

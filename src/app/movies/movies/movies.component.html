@@ -113,6 +113,7 @@
     <button (click)="closePopup()" class="close">Close</button>
   </div> -->
   <div class="modal-content" (click)="$event.stopPropagation()">
+    <img [src]="selectedMovie.poster" alt="{{ selectedMovie.movieTitle }}" class="modal-movie-poster">
     <h3 class="modal-title">{{ selectedMovie.movieTitle }} - {{ selectedMovie.duration }} mins</h3>
     <p class="modal-genre">Genre: {{ selectedMovie.genre }}</p>
 
