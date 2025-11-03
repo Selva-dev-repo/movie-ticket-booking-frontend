@@ -125,7 +125,7 @@
   width: 90%;
   max-width: 500px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-  animation: fadeIn 0.3s ease-out;
+  animation: fadeIn 1s ease-out;
   text-align: center;
 }
 
@@ -154,4 +154,13 @@
   border-radius: 5px;
   padding: 10px;
   font-weight: 600;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

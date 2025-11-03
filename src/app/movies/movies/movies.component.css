@@ -126,7 +126,7 @@
   max-width: 400px;
   width: 90%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  animation: fadeIn 0.3s ease-in;
+  animation: scaleUp 1s ease-in;
 }
 
 .form-group {
@@ -189,7 +189,7 @@
   max-width: 400px;
   width: 90%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  animation: fadeIn 0.3s ease-in;
+  animation: fadeIn 1s ease-in;
 }
 
 button {
@@ -223,4 +223,22 @@ button {
   width: 55%;
   height: 25%;
   object-fit: cover;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0.8);
+  }
+  to {
+    transform: scale(1);
+  }
 }

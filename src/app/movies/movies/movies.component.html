@@ -26,41 +26,6 @@
 </div>
 
 <!-- Add movie modal -->
-<!-- <div *ngIf="showAddMovieModal" class="add-movie-modal">
-  <div class="modal-content-movie">
-    <h2>Add New Movie</h2>
-    <form (ngSubmit)="addMovie()">
-      <div class="form-group">
-        <label for="movieTitle">Movie Title:</label>
-        <input class="title-area" id="movietitle" [(ngModel)]="newMovie.movieTitle" name="movieTitle" required />
-      </div>
-      <div class="form-group">
-        <label for="duration" class="duration">Duration:</label>
-        <input class="duration-area" id="duration" [(ngModel)]="newMovie.duration" name="duration" required />
-      </div>
-      <div class="form-group">
-        <label for="genre">Genre:</label>
-        <input class="show-area genre" id="genre" [(ngModel)]="newMovie.genre" name="genre" />
-      </div>
-      <div class="form-group">
-        <label for="release-date">Release Date:</label>
-        <input class="show-area release" id="release-date" [(ngModel)]="newMovie.releaseDate" name="release-date" />
-      </div>
-      <div class="form-group">
-        <label for="poster">Poster:</label>
-        <input class="show-area poster" id="poster" [(ngModel)]="newMovie.poster" name="poster" />
-      </div>
-      <div class="form-group">
-        <label for="movie-status">Movie Status:</label>
-        <input class="show-area status" id="movie-status" [(ngModel)]="newMovie.movieStatus" name="movie-status" />
-      </div>
-      <div class="modal-actions">
-        <button type="button" class="cancel-btn" (click)="closeAddMovieModal()">Cancel</button>
-        <button type="submit" class="add-btn" (click)="addMovie()">Add Movie</button>
-      </div>
-    </form>
-  </div>
-</div> -->
 <div *ngIf="showAddMovieModal" class="add-movie-modal" (click)="closeAddMovieModal()">
   <div class="modal-content-movie" (click)="$event.stopPropagation()">
     <h2>{{ editMode ? 'Edit Movie' : 'Add New Movie' }}</h2>
@@ -106,12 +71,7 @@
 
 <!-- Popup Modal -->
 <div *ngIf="selectedMovie" class="modal" (click)="closePopup()">
-  <!-- <div class="modal-content">
-    <h3 class="modal-title">{{ selectedMovie.movieTitle }} - {{ selectedMovie.duration }} mins</h3>
-    <p class="modal-genre"> Genre: {{ selectedMovie.genre }}</p>
-    <button (click)="bookTicket(selectedMovie)" class="book-ticket">Book Ticket</button>
-    <button (click)="closePopup()" class="close">Close</button>
-  </div> -->
+  
   <div class="modal-content" (click)="$event.stopPropagation()">
     <img [src]="selectedMovie.poster" alt="{{ selectedMovie.movieTitle }}" class="modal-movie-poster">
     <h3 class="modal-title">{{ selectedMovie.movieTitle }} - {{ selectedMovie.duration }} mins</h3>

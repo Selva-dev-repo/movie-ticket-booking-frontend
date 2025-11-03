@@ -279,7 +279,7 @@
   max-width: 400px;
   width: 90%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  animation: fadeIn 0.3s ease-in;
+  animation: scaleUp 1s ease-in;
 }
 
 .form-group {
@@ -335,4 +335,13 @@
   max-width: 600px;
   width: 90%;
   position: relative;
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0.8);
+  }
+  to {
+    transform: scale(1);
+  }
 }
