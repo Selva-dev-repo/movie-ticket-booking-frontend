@@ -33,7 +33,7 @@
   </div>
 
   <!-- View Ticket Modal -->
-  <div class="modal" *ngIf="showModal" (click)="closeModal()" >
+  <div class="modal" *ngIf="showModal" (click)="closeModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="close"><button class="close-btn" (click)="closeModal()">✕</button></div>
 
@@ -48,11 +48,21 @@
         <p><strong>Seats:</strong> {{ selectedBooking.seatNumber }}</p>
         <p><strong>Amount:</strong> ₹{{ selectedBooking.amount }} </p>
         <p><strong>Booking Status: </strong> {{ selectedBooking.bookingStatus }} </p>
-        <button class="cancel-ticket" *ngIf="selectedBooking.bookingStatus !== 'Cancelled'"
+        <!-- <button class="cancel-ticket" *ngIf="selectedBooking.bookingStatus !== 'Cancelled'"
+          (click)="openConfirmModal(selectedBooking.bookingId)">
+          Cancel Ticket
+        </button> -->
+
+        <button class="cancel-ticket"
+          *ngIf="!isPastShow(selectedBooking.showDate, selectedBooking.showTime) && selectedBooking.bookingStatus !== 'Cancelled'"
           (click)="openConfirmModal(selectedBooking.bookingId)">
           Cancel Ticket
         </button>
-        <!-- <button class="cancel-ticket" *ngIf="selectedBooking.bookingStatus != 'Cancelled'" (click)="cancelTicket()">Cancel Ticket</button> -->
+
+        <span class="finished-label" *ngIf="isPastShow(selectedBooking.showDate, selectedBooking.showTime) && selectedBooking.bookingStatus !== 'Cancelled'">
+          <span>&#10003; </span>Completed
+        </span>
+
       </div>
     </div>
   </div>
@@ -69,9 +79,9 @@
   </div>
 
   <!-- Ticket Cancel Modal -->
-   <div class="cancelled" *ngIf="cancelModal" (click)="closeCancelModal()">
+  <div class="cancelled" *ngIf="cancelModal" (click)="closeCancelModal()">
     <div class="modal-content-cancel" (click)="$event.stopPropagation()">
       <p>Your ticket has been cancelled successfully</p>
     </div>
-   </div>
+  </div>
 </div>

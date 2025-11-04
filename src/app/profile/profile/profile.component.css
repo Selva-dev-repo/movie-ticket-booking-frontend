@@ -121,7 +121,7 @@ footer {
 
 .modal-content {
   background-color: white;
-  padding: 20px;
+  padding: 0px 30px 20px 10px;
   border-radius: 5px;
   width: 90%;
   max-width: 500px;
@@ -158,11 +158,17 @@ footer {
 }
 
 .save-changes {
+  border: 1px solid #28a745;
+  border-radius: 10px;
+  padding: 10px;
   background-color: #28a745;
   color: white;
 }
 
 .close-changes {
+  border: 1px solid #dc3545;
+  border-radius: 10px;
+  padding: 10px;
   background-color: #dc3545;
   color: white;
 }

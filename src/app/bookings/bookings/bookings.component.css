@@ -14,7 +14,8 @@
 
 .all-bookings {
     border: 1px solid rgb(255, 253, 219);
-    background-color: rgb(217, 252, 246);
+    background-color: rgb(253, 251, 213);
+    
     margin-top: 15px;
     /* margin-left: -35px; */
     line-height: 30px;
@@ -56,6 +57,16 @@
   padding: 10px;
 }
 
+.finished-label {
+  border: 1px solid green;
+  border-radius: 5px;
+  background-color: green;
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 5px 15px;
+}
+
 .status-confirmed {
   color: rgb(0, 161, 0);
   font-weight: bold;
@@ -88,7 +99,7 @@
   background-color: rgb(222, 252, 255);
   padding: 20px;
   border-radius: 15px;
-  width: 90%;
+  width: 26%;
   max-width: 500px;
   position: relative;
 }

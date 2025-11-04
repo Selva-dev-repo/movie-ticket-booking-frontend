@@ -100,6 +100,7 @@ export class BookingsComponent implements OnInit {
 
   openConfirmModal(bookingId: number): void {
     this.selectedBookingId = bookingId;
+    this.showModal = false;
     this.showConfirmModal = true;
   }
 
@@ -132,6 +133,9 @@ export class BookingsComponent implements OnInit {
 
         this.loading = false;
         this.cancelModal = true;
+        setTimeout(() => {
+          this.cancelModal = false;
+        }, 3000);
         // alert('Your ticket has been cancelled successfully.');
       },
       error: (err) => {
@@ -146,6 +150,14 @@ export class BookingsComponent implements OnInit {
     this.cancelModal = false;
     this.selectedBookingId = null;
   }
+
+  isPastShow(showDate: string, showTime: string): boolean {
+  if (!showDate || !showTime) return false;
+  const showDateTime = new Date(`${showDate}T${showTime}`);
+  const now = new Date();
+  return showDateTime < now;
+}
+
 
   logout(): void {
     this.bookings = [];

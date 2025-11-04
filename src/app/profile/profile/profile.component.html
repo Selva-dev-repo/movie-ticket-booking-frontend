@@ -72,8 +72,8 @@
 <footer><p class="copyrights"> Movie Ticket Booking &copy; 2025 | All rights reserved.</p></footer>
 
 <!-- Edit profile form -->
- <div *ngIf="showModal" class="modal">
-  <div class="modal-content">
+ <div *ngIf="showModal" class="modal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
     <span class="close" (click)="closeModal()">&times;</span>
     <h2>Edit Profile</h2>
     <form [formGroup]="editForm" (ngSubmit)="submitEdit()">

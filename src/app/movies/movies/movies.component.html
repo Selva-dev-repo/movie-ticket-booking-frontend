@@ -21,6 +21,7 @@
         {{movie.duration}} mins</div>
       <div class="movie-genre">{{ movie.genre }}</div>
       <div class="movie-date">{{ movie.releaseDate | date: 'YYYY-MM-d' }}</div>
+      <!-- <button *ngIf="!isAdmin" (click)="bookTicket(selectedMovie)" class="book-ticket">Book Ticket</button> -->
     </div>
   </div>
 </div>
@@ -32,32 +33,26 @@
 
     <form (ngSubmit)="editMode ? saveEditedMovie() : addMovie()">
       <div class="form-group">
-        <!-- <label for="movieTitle">Movie Title:</label> -->
         <input class="title-area" id="movietitle" [(ngModel)]="newMovie.movieTitle" name="movieTitle" placeholder="Enter Movie Title" required />
       </div>
 
       <div class="form-group">
-        <!-- <label for="duration" class="duration">Duration:</label> -->
         <input class="duration-area" id="duration" [(ngModel)]="newMovie.duration" placeholder="Enter Duration" name="duration" required />
       </div>
 
       <div class="form-group">
-        <!-- <label for="genre">Genre:</label> -->
         <input class="show-area " id="genre" [(ngModel)]="newMovie.genre" placeholder="Enter Genre" name="genre" />
       </div>
 
       <div class="form-group">
-        <!-- <label for="release-date">Release Date:</label> -->
         <input class="show-area " id="release-date" [(ngModel)]="newMovie.releaseDate" placeholder="Enter Release Date" name="release-date" />
       </div>
 
       <div class="form-group">
-        <!-- <label for="poster">Poster:</label> -->
         <input class="show-area " id="poster" [(ngModel)]="newMovie.poster" placeholder="Enter Poster Url" name="poster" />
       </div>
 
       <div class="form-group">
-        <!-- <label for="movie-status">Movie Status:</label> -->
         <input class="show-area " id="movie-status" [(ngModel)]="newMovie.movieStatus" placeholder="Enter Movie Status" name="movie-status" />
       </div>
 
@@ -73,8 +68,10 @@
 <div *ngIf="selectedMovie" class="modal" (click)="closePopup()">
   
   <div class="modal-content" (click)="$event.stopPropagation()">
-    <img [src]="selectedMovie.poster" alt="{{ selectedMovie.movieTitle }}" class="modal-movie-poster">
     <h3 class="modal-title">{{ selectedMovie.movieTitle }} - {{ selectedMovie.duration }} mins</h3>
+
+    <img [src]="selectedMovie.poster" alt="{{ selectedMovie.movieTitle }}" class="modal-movie-poster">
+    <!-- <h3 class="modal-title">{{ selectedMovie.movieTitle }} - {{ selectedMovie.duration }} mins</h3> -->
     <p class="modal-genre">Genre: {{ selectedMovie.genre }}</p>
 
     <button *ngIf="isAdmin" (click)="openEditMovieModal(selectedMovie)" class="book-ticket">Edit Movie</button>
