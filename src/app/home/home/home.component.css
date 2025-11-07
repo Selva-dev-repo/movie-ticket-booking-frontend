@@ -37,7 +37,7 @@
   text-align: center;
   padding: 10px 0px 55px 0px;
   transition: transform 0.2s ease;
-  max-width: 240px;
+  max-width: 340px;
 }
 
 .movie-card:hover {
@@ -48,7 +48,7 @@
 
 .movie-poster {
   margin-top: 20px;
-  width: 75%;
+  width: 60%;
   height: 70%;
   object-fit: cover;
 }

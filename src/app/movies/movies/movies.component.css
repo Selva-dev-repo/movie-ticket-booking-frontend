@@ -79,7 +79,7 @@
   padding: 10px;
   transition: transform 0.2s ease;
   cursor: pointer;
-  max-width: 240px;
+  max-width: 340px;
 }
 
 .movie-card:hover {
