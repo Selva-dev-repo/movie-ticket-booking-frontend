@@ -4,6 +4,17 @@
   margin: 20px 20px;
 }
 
+.search-container {
+  padding: 2px 0px 60px 0px;
+}
+
+.search-input {
+  border: 1px solid grey;
+  border-radius: 10px;
+  width: 50%;
+  padding: 10px;
+}
+
 .movie-name {
   font-size: 2em;
   /* text-align: center; */
@@ -20,7 +31,7 @@
 
 .theater-card {
   border: 1px solid rgb(248, 247, 247);
-    background-color: rgb(251, 247, 233);
+    background-color: rgb(255, 248, 222);
     margin-top: 8px;
     padding: 10px 0px 4px 5px;
     border-radius: 15px
@@ -329,6 +340,28 @@
 }
 
 .added-modal-content {
+  background: rgb(197, 251, 149);
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 600px;
+  width: 90%;
+  position: relative;
+}
+
+.confirm-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-content-confirm {
   background: rgb(197, 251, 149);
   padding: 20px;
   border-radius: 5px;

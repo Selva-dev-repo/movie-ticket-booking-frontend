@@ -5,11 +5,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { HomeService, UpcomingMovies } from '../../services/home.service';
 import { BookingService, DisplayBooking } from '../../services/booking.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule, FormsModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
@@ -21,6 +22,8 @@ export class HomeComponent implements OnInit {
   showModal: boolean = false;
   openModal: boolean = false;
   selectedMovie: UpcomingMovies | null = null;
+  searchTerm: string = '';
+  filteredMovies: UpcomingMovies[] = [];
   error: string = '';
   bookingError: string = '';
 
@@ -55,7 +58,7 @@ export class HomeComponent implements OnInit {
       next: (movies) => {
         const today = new Date();
         this.movies = movies;
-
+        this.filteredMovies = movies;
         movies.forEach((movie) => {
           const releaseDate = new Date(movie.releaseDate);
 
@@ -75,10 +78,7 @@ export class HomeComponent implements OnInit {
                   console.log(`Updated ${movie.movieTitle} to Released`);
                 },
                 error: (err) => {
-                  console.error(
-                    `Error updating movie ${movie.movieId}:`,
-                    err
-                  );
+                  console.error(`Error updating movie ${movie.movieId}:`, err);
                 },
               });
           }
@@ -88,6 +88,21 @@ export class HomeComponent implements OnInit {
         console.error('Error fetching movies:', err);
       },
     });
+  }
+
+  onSearch(): void {
+    const term = this.searchTerm.toLowerCase().trim();
+
+    if (!term) {
+      this.filteredMovies = this.movies;
+      return;
+    }
+
+    this.filteredMovies = this.movies.filter(
+      (movie) =>
+        movie.movieTitle?.toLowerCase().includes(term) ||
+        movie.genre?.toLowerCase().includes(term)
+    );
   }
 
   releasedMovies() {
@@ -104,16 +119,21 @@ export class HomeComponent implements OnInit {
   fetchLatestBooking(): void {
     this.bookingLoading = true;
     this.bookingError = '';
+
     this.bookingService.showBookings().subscribe({
       next: (bookings) => {
-        const sortedBooking = bookings.sort(
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const validBookings = bookings.filter((b: any) => {
+          const showDate = new Date(b.showDate);
+          showDate.setHours(0, 0, 0, 0);
+          return showDate >= today;
+        });
+
+        const sortedBooking = validBookings.sort(
           (a, b) => b.bookingId - a.bookingId
         );
-        // const bookingConfirmed = sortedBooking.filter(b => b.bookingStatus === "Confirmed");
-        // this.latestBooking =
-        //   (bookings.sort((a, b) => b.bookingId - a.bookingId)[0] || null) && bookings.filter(b => b.bookingStatus === 'Confirmed');
-        // console.log('Latest booking fetched:', this.latestBooking);
-        // console.log("Latest fetched booking: ", sortedBooking);
         this.latestBooking = sortedBooking[0] || null;
 
         this.bookingLoading = false;
@@ -130,11 +150,23 @@ export class HomeComponent implements OnInit {
     this.bookingLoading = true;
     this.showModal = true;
     this.bookingError = '';
+
     this.bookingService.showBookings().subscribe({
       next: (bookings) => {
-        this.latestBooking =
-          bookings.sort((a, b) => b.bookingId - a.bookingId)[0] || null;
-        // console.log('Latest booking fetched:', this.latestBooking);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const validBookings = bookings.filter((b: any) => {
+          const showDate = new Date(b.showDate);
+          showDate.setHours(0, 0, 0, 0);
+          return showDate >= today;
+        });
+
+        const sortedBooking = validBookings.sort(
+          (a, b) => b.bookingId - a.bookingId
+        );
+        this.latestBooking = sortedBooking[0] || null;
+
         this.bookingLoading = false;
       },
       error: (err) => {
@@ -148,8 +180,8 @@ export class HomeComponent implements OnInit {
   openMovieModal(movie: UpcomingMovies): void {
     console.log('Movies get: ', movie);
 
-    this.selectedMovie = movie; // Set the selected movie
-    this.openModal = true; // Open the modal
+    this.selectedMovie = movie;
+    this.openModal = true;
   }
 
   closeModal() {
@@ -157,8 +189,4 @@ export class HomeComponent implements OnInit {
     this.openModal = false;
     this.selectedMovie = null;
   }
-
-  // closeModal() {
-  //   this.showModal = false;
-  // }
 }

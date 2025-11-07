@@ -39,6 +39,8 @@ export class MoviesComponent implements OnInit {
     releaseDate: '',
     movieStatus: '',
   };
+  searchTerm: string = '';
+  filteredMovies: Movie[] = [];
   error = '';
 
   constructor(
@@ -83,6 +85,7 @@ export class MoviesComponent implements OnInit {
     this.homeService.getReleasedMovies().subscribe({
       next: (movies: Movie[]) => {
         this.movies = movies;
+        this.filteredMovies = movies;
         this.loading = false;
       },
       error: (error: any) => {
@@ -91,6 +94,21 @@ export class MoviesComponent implements OnInit {
         this.loading = false;
       },
     });
+  }
+
+  onSearch(): void {
+    const term = this.searchTerm.toLowerCase().trim();
+
+    if (!term) {
+      this.filteredMovies = this.movies;
+      return;
+    }
+
+    this.filteredMovies = this.movies.filter(
+      (movie) =>
+        movie.movieTitle?.toLowerCase().includes(term) ||
+        movie.genre?.toLowerCase().includes(term)
+    );
   }
 
   openAddMovieModal() {

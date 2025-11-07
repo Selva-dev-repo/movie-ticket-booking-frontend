@@ -14,6 +14,18 @@
   /* background-color: red; */
 }
 
+.search-container {
+  /* margin-top: 20px; */
+  padding: 2px 0px 20px 0px;
+}
+
+.search-input {
+  border: 1px solid grey;
+  border-radius: 10px;
+  width: 50%;
+  padding: 10px;
+}
+
 .add-movie-btn {
   text-align: right;
   margin-bottom: 1rem;
@@ -54,6 +66,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
+  max-width: 1200px;
 }
 
 .movie-card {
@@ -66,10 +79,12 @@
   padding: 10px;
   transition: transform 0.2s ease;
   cursor: pointer;
+  max-width: 240px;
 }
 
 .movie-card:hover {
-  transform: translateY(-5px);
+  /* transform: translateY(-5px); */
+  transform: scale(1.03);
   background-color: rgb(255, 230, 150);
 }
 

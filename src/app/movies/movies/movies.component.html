@@ -13,8 +13,13 @@
     <p>No movies found.</p>
   </div>
 
-  <div class="movies-grid" *ngIf="!loading && !error">
-    <div class="movie-card" *ngFor="let movie of movies" (click)="showMovieDetails(movie)">
+  <div class="search-container">
+    <input type="text" placeholder="Search by title, genre, or status..." [(ngModel)]="searchTerm" (input)="onSearch()"
+      class="search-input" />
+  </div>
+
+  <div class="movies-grid" *ngIf="!loading && !error && filteredMovies.length > 0">
+    <div class="movie-card" *ngFor="let movie of filteredMovies" (click)="showMovieDetails(movie)">
       <!-- <img src="../../../assets/images/CinemaTicketPoster.jpg" alt="{{ movie.movieTitle }} Poster" width="20px" height="20px" class="movie-poster"/> -->
       <img [src]="movie.poster" alt="{{ movie.movieTitle }}" class="movie-poster">
       <div class="movie-title"><span style="text-transform: uppercase;">{{ movie.movieTitle }}</span> -
@@ -26,6 +31,10 @@
   </div>
 </div>
 
+<div *ngIf="!loading && filteredMovies.length === 0">
+  <p>No movies found.</p>
+</div>
+
 <!-- Add movie modal -->
 <div *ngIf="showAddMovieModal" class="add-movie-modal" (click)="closeAddMovieModal()">
   <div class="modal-content-movie" (click)="$event.stopPropagation()">
@@ -33,11 +42,13 @@
 
     <form (ngSubmit)="editMode ? saveEditedMovie() : addMovie()">
       <div class="form-group">
-        <input class="title-area" id="movietitle" [(ngModel)]="newMovie.movieTitle" name="movieTitle" placeholder="Enter Movie Title" required />
+        <input class="title-area" id="movietitle" [(ngModel)]="newMovie.movieTitle" name="movieTitle"
+          placeholder="Enter Movie Title" required />
       </div>
 
       <div class="form-group">
-        <input class="duration-area" id="duration" [(ngModel)]="newMovie.duration" placeholder="Enter Duration" name="duration" required />
+        <input class="duration-area" id="duration" [(ngModel)]="newMovie.duration" placeholder="Enter Duration"
+          name="duration" required />
       </div>
 
       <div class="form-group">
@@ -45,20 +56,23 @@
       </div>
 
       <div class="form-group">
-        <input class="show-area " id="release-date" [(ngModel)]="newMovie.releaseDate" placeholder="Enter Release Date" name="release-date" />
+        <input class="show-area " id="release-date" [(ngModel)]="newMovie.releaseDate" placeholder="Enter Release Date"
+          name="release-date" />
       </div>
 
       <div class="form-group">
-        <input class="show-area " id="poster" [(ngModel)]="newMovie.poster" placeholder="Enter Poster Url" name="poster" />
+        <input class="show-area " id="poster" [(ngModel)]="newMovie.poster" placeholder="Enter Poster Url"
+          name="poster" />
       </div>
 
       <div class="form-group">
-        <input class="show-area " id="movie-status" [(ngModel)]="newMovie.movieStatus" placeholder="Enter Movie Status" name="movie-status" />
+        <input class="show-area " id="movie-status" [(ngModel)]="newMovie.movieStatus" placeholder="Enter Movie Status"
+          name="movie-status" />
       </div>
 
       <div class="modal-actions">
-        <button type="button" class="cancel-btn" (click)="closeAddMovieModal()">Cancel</button>
         <button type="submit" class="add-btn">{{ editMode ? 'Save Changes' : 'Add Movie' }}</button>
+        <button type="button" class="cancel-btn" (click)="closeAddMovieModal()">Cancel</button>
       </div>
     </form>
   </div>
@@ -66,7 +80,7 @@
 
 <!-- Popup Modal -->
 <div *ngIf="selectedMovie" class="modal" (click)="closePopup()">
-  
+
   <div class="modal-content" (click)="$event.stopPropagation()">
     <h3 class="modal-title">{{ selectedMovie.movieTitle }} - {{ selectedMovie.duration }} mins</h3>
 

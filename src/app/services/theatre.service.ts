@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 
@@ -38,6 +38,15 @@ export class TheatreService {
 
   addTheatre(theatre: AddTheatre): Observable<Theatre> {
     return this.http.post<Theatre>(`${this.apiUrl}/theatres`, theatre);
+  }
+
+  updateTheatre(TheatreId: number, theatre: any): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = token
+      ? new HttpHeaders({ Authorization: `Bearer ${token}` })
+      : undefined;
+
+    return this.http.put(`${this.apiUrl}/theatres/${TheatreId}`, theatre, { headers });
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {

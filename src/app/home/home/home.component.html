@@ -6,7 +6,10 @@
   <div *ngIf="bookingError && !bookingLoading" class="error">{{ bookingError }}</div>
 
   <!-- No bookings state -->
-  <div *ngIf="!bookingLoading && !bookingError && !latestBooking" class="no-bookings">No bookings found</div>
+  <!-- <div *ngIf="!bookingLoading && !bookingError && !latestBooking" class="no-bookings">No bookings found</div> -->
+  <div *ngIf="!bookingLoading && !bookingError && !latestBooking" class="no-bookings">
+    That's a wrap! You've completed all your recent show bookings — time for a new one?
+  </div>
 
   <!-- Latest booking -->
   <div *ngIf="!bookingLoading && !bookingError && latestBooking" class="latest-booking-card">
@@ -15,7 +18,8 @@
       latestBooking.duration || 'N/A' }} min</p>
     <p><strong>Theatre:</strong> {{ latestBooking.theatreName || 'N/A' }} - {{ latestBooking.location || 'N/A' }}</p>
     <p><strong>Screen:</strong> {{ latestBooking.screenNumber || 'N/A' }}</p>
-    <p><strong>Date & Show Time:</strong> {{ latestBooking.showDate | date: 'dd/MM/yy' }} - {{ latestBooking.showTime || 'N/A' }}</p>
+    <p><strong>Date & Show Time:</strong> {{ latestBooking.showDate | date: 'dd/MM/yy' }} - {{ latestBooking.showTime ||
+      'N/A' }}</p>
     <p><strong>Seats:</strong> {{ latestBooking.seatNumber || 'N/A' }}</p>
     <p><strong>Amount:</strong> ₹{{ latestBooking.amount || 'N/A' }}</p>
     <p><strong>Booking Status:</strong> <span [ngClass]="{
@@ -32,35 +36,63 @@
       <div class="close"><button type="button" class="close-btn" (click)="closeModal()">X</button></div>
       <div *ngIf="!loading">Loading booking details...</div>
       <div class="modal-ticket">
-      <p><strong>Movie: </strong> <span class="movie-name">{{ latestBooking.movieName || 'N/A' }}</span> - {{
-        latestBooking.duration || 'N/A' }} min</p>
-      <p><strong>Theatre:</strong> {{ latestBooking.theatreName || 'N/A' }} - {{ latestBooking.location || 'N/A' }}</p>
-      <p><strong>Screen:</strong> {{ latestBooking.screenNumber || 'N/A' }}</p>
-      <p><strong>Date:</strong> {{ latestBooking.showDate | date: 'dd/MM/yy' }}</p>
-      <p><strong>Show Time:</strong> {{ latestBooking.showTime || 'N/A' }}</p>
-      <p><strong>Seats:</strong> {{ latestBooking.seatNumber || 'N/A' }}</p>
-      <p><strong>Amount & Status:</strong> <span [ngClass]="{
+        <p><strong>Movie: </strong> <span class="movie-name">{{ latestBooking.movieName || 'N/A' }}</span> - {{
+          latestBooking.duration || 'N/A' }} min</p>
+        <p><strong>Theatre:</strong> {{ latestBooking.theatreName || 'N/A' }} - {{ latestBooking.location || 'N/A' }}
+        </p>
+        <p><strong>Screen:</strong> {{ latestBooking.screenNumber || 'N/A' }}</p>
+        <p><strong>Date:</strong> {{ latestBooking.showDate | date: 'dd/MM/yy' }}</p>
+        <p><strong>Show Time:</strong> {{ latestBooking.showTime || 'N/A' }}</p>
+        <p><strong>Seats:</strong> {{ latestBooking.seatNumber || 'N/A' }}</p>
+        <p><strong>Amount & Status:</strong> <span [ngClass]="{
       'status-confirmed': latestBooking.bookingStatus === 'Confirmed',
       'status-pending': latestBooking.bookingStatus === 'Pending',
       'status-cancelled': latestBooking.bookingStatus === 'Cancelled'
     }"> ₹{{ latestBooking.amount || 'N/A' }} - {{ latestBooking.bookingStatus || 'N/A' }}</span></p>
-    </div>
+      </div>
     </div>
   </div>
 
   <!-- Upcoming movies -->
-  <h2 class="section-title">Upcoming Movies</h2>
+  <!-- <h2 class="section-title">Upcoming Movies</h2>
   <div class="movies-grid">
     <div class="movie-card" *ngFor="let movie of movies" (click)="openMovieModal(movie)">
       <img [src]="movie.poster" alt="{{ movie.movieTitle }} Poster" width="20%" class="movie-poster">
-      <!-- <img src="../../../assets/images/CinemaTicketPoster.jpg" alt="{{ movie.movieTitle }} Poster" width="50px" -->
-        <!-- height="50px" class="movie-poster" /> -->
-      <div class="movie-title"><span style="text-transform: uppercase;">{{ movie.movieTitle }}</span> -
-        {{movie.duration}} mins</div>
+     
+  <div class="movie-title"><span style="text-transform: uppercase;">{{ movie.movieTitle }}</span> -
+    {{movie.duration}} mins</div>
+  <div class="movie-genre">{{ movie.genre }}</div>
+  <div class="movie-date">Date of Release: {{ movie.releaseDate | date: 'YYYY-MM-d' }}</div>
+</div>
+</div> -->
+
+  <h2 class="section-title">Upcoming Movies</h2>
+
+  <div class="search-container">
+    <input type="text" placeholder="Search by movie title and genre" [(ngModel)]="searchTerm" (input)="onSearch()"
+      class="search-input" />
+  </div>
+
+  <div class="movies-grid" *ngIf="filteredMovies.length > 0; else noMovies">
+    <div class="movie-card" *ngFor="let movie of filteredMovies" (click)="openMovieModal(movie)">
+      <img [src]="movie.poster" alt="{{ movie.movieTitle }} Poster" class="movie-poster" />
+      <div class="movie-title">
+        <span style="text-transform: uppercase;">{{ movie.movieTitle }}</span> -
+        {{ movie.duration }} mins
+      </div>
       <div class="movie-genre">{{ movie.genre }}</div>
-      <div class="movie-date">Date of Release: {{ movie.releaseDate | date: 'YYYY-MM-d' }}</div>
+      <div class="movie-date">
+        Date of Release: {{ movie.releaseDate | date: 'YYYY-MM-d' }}
+      </div>
     </div>
   </div>
+
+  <!-- No movies found -->
+  <ng-template #noMovies>
+    <p style="text-align: center; font-style: italic; margin-top: 20px;">
+      No movies match your search.
+    </p>
+  </ng-template>
 
   <div class="modal" *ngIf="openModal" (click)="closeModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">

@@ -44,8 +44,13 @@ export class TheatresComponent implements OnInit {
   isLoading: boolean = false;
   role: string | null = this.authService.getRole();
   showAddForm: boolean = false;
+  showEditForm: boolean = false;
+  editTheatreData: any = { theatreName: '', location: '', screenNumber: '' };
+  selectedTheatreId: number | null = null;
   // addedTheatre: boolean = false;
   newTheatre: AddTheatre = { theatreName: '', location: '', screenNumber: '' };
+  searchTerm: string = '';
+  filteredTheatres: Theatre[] = [];
   errorMessage: string = '';
 
   constructor(
@@ -59,7 +64,6 @@ export class TheatresComponent implements OnInit {
 
   ngOnInit(): void {
     this.role = this.authService.getRole();
-    console.log(this.role);
 
     if (this.role === 'Admin') {
       this.fetchAllTheatres();
@@ -101,6 +105,7 @@ export class TheatresComponent implements OnInit {
     this.theaterService.getTheaters().subscribe({
       next: (data: Theatre[]) => {
         this.theaters = data;
+        this.filteredTheatres = data;
         this.movieName = 'All Theatres';
         this.isLoading = false;
       },
@@ -118,6 +123,7 @@ export class TheatresComponent implements OnInit {
     this.theaterService.getTheatersByMovie(movieId, movieName).subscribe({
       next: (data: Theatre[]) => {
         this.theaters = data;
+        this.filteredTheatres = data;
         this.isLoading = false;
       },
       error: (error: any) => {
@@ -126,6 +132,20 @@ export class TheatresComponent implements OnInit {
         this.isLoading = false;
       },
     });
+  }
+
+  onSearch(): void {
+    const term = this.searchTerm.toLowerCase().trim();
+
+    if (!term) {
+      this.filteredTheatres = [...this.theaters];
+    } else {
+      this.filteredTheatres = this.theaters.filter(
+        (theatre) =>
+          theatre.theatreName.toLowerCase().includes(term) ||
+          theatre.location.toLowerCase().includes(term)
+      );
+    }
   }
 
   addTheatre(): void {
@@ -142,7 +162,7 @@ export class TheatresComponent implements OnInit {
       next: (response) => {
         console.log('Theatre added successfully', response);
         alert('Theatre added successfully!');
-        // this.addedTheatre = true; 
+        // this.addedTheatre = true;
         // setTimeout(() => {
         //   this.addedTheatre = false;
         // }, 5000);
@@ -163,6 +183,47 @@ export class TheatresComponent implements OnInit {
 
   closeTheatreModal() {
     this.showAddForm = false;
+  }
+
+  openEditTheatre(theatre: Theatre) {
+    this.selectedTheatreId = theatre.theatreId;
+    this.editTheatreData = { ...theatre };
+    this.showEditForm = true;
+  }
+
+  updateTheatre() {
+    if (!this.selectedTheatreId) return;
+
+    if (
+      !this.editTheatreData.theatreName ||
+      !this.editTheatreData.location ||
+      !this.editTheatreData.screenNumber
+    ) {
+      alert('All fields are required!');
+      return;
+    }
+
+    this.theaterService
+      .updateTheatre(this.selectedTheatreId, this.editTheatreData)
+      .subscribe({
+        next: () => {
+          alert('Theatre updated successfully!');
+          if (this.role === 'Admin') this.fetchAllTheatres();
+          else if (this.movieId && this.movieName)
+            this.fetchTheatres(this.movieId, this.movieName);
+          this.closeEditModal();
+        },
+        error: (err) => {
+          console.error('Error updating theatre:', err);
+          alert('Failed to update theatre. Please try again.');
+        },
+      });
+  }
+
+  closeEditModal() {
+    this.showEditForm = false;
+    this.selectedTheatreId = null;
+    this.editTheatreData = { theatreName: '', location: '', screenNumber: '' };
   }
 
   // openAddedTheatre() {
@@ -234,9 +295,98 @@ export class TheatresComponent implements OnInit {
     }
   }
 
+  // generateSeatMap() {
+  //   const rows = 5;
+  //   const cols = 4;
+  //   const allSeatLabels = [
+  //     'A1',
+  //     'A2',
+  //     'A3',
+  //     'A4',
+  //     'B1',
+  //     'B2',
+  //     'B3',
+  //     'B4',
+  //     'C1',
+  //     'C2',
+  //     'C3',
+  //     'C4',
+  //     'D1',
+  //     'D2',
+  //     'D3',
+  //     'D4',
+  //     'E1',
+  //     'E2',
+  //     'E3',
+  //     'E4',
+  //   ];
+
+  //   if (
+  //     this.movieId &&
+  //     this.selectedTheater?.theatreId &&
+  //     this.selectedDate &&
+  //     this.selectedShowtime
+  //   ) {
+  //     this.bookingService
+  //       .checkSeatAvailability(
+  //         allSeatLabels,
+  //         this.selectedTheater.theatreId,
+  //         this.movieId,
+  //         this.selectedDate,
+  //         this.selectedShowtime
+  //       )
+  //       .subscribe({
+  //         next: (availability: boolean[]) => {
+  //           this.seats = [];
+  //           for (let i = 0; i < allSeatLabels.length; i++) {
+  //             const row = Math.floor(i / cols);
+  //             const col = (i % cols) + 1;
+  //             const label = allSeatLabels[i];
+  //             const id = i;
+
+  //             this.seats.push({
+  //               id,
+  //               label,
+  //               status: availability[i] ? 'available' : 'unavailable',
+  //             });
+  //           }
+  //           this.selectedSeats = this.seats.filter(
+  //             (s) => s.status === 'selected'
+  //           );
+  //           this.isLoading = false;
+  //         },
+  //         error: (error) => {
+  //           console.error('Error checking seat availability:', error);
+  //           // Fallback: all seats available
+  //           this.seats = [];
+  //           for (let i = 0; i < allSeatLabels.length; i++) {
+  //             const row = Math.floor(i / cols);
+  //             const col = (i % cols) + 1;
+  //             const label = allSeatLabels[i];
+  //             const id = i;
+
+  //             this.seats.push({
+  //               id,
+  //               label,
+  //               status: 'available',
+  //             });
+  //           }
+  //           this.selectedSeats = this.seats.filter(
+  //             (s) => s.status === 'selected'
+  //           );
+  //           this.errorMessage =
+  //             'Failed to load seat availability. All seats shown as available.';
+  //           this.isLoading = false;
+  //         },
+  //       });
+  //   } else {
+  //     this.seats = [];
+  //     this.selectedSeats = [];
+  //     this.isLoading = false;
+  //   }
+  // }
+
   generateSeatMap() {
-    const rows = 5;
-    const cols = 4;
     const allSeatLabels = [
       'A1',
       'A2',
@@ -266,6 +416,8 @@ export class TheatresComponent implements OnInit {
       this.selectedDate &&
       this.selectedShowtime
     ) {
+      this.isLoading = true;
+
       this.bookingService
         .checkSeatAvailability(
           allSeatLabels,
@@ -276,19 +428,12 @@ export class TheatresComponent implements OnInit {
         )
         .subscribe({
           next: (availability: boolean[]) => {
-            this.seats = [];
-            for (let i = 0; i < allSeatLabels.length; i++) {
-              const row = Math.floor(i / cols);
-              const col = (i % cols) + 1;
-              const label = allSeatLabels[i];
-              const id = i;
+            this.seats = allSeatLabels.map((label, index) => ({
+              id: index,
+              label,
+              status: availability[index] ? 'available' : 'unavailable',
+            }));
 
-              this.seats.push({
-                id,
-                label,
-                status: availability[i] ? 'available' : 'unavailable',
-              });
-            }
             this.selectedSeats = this.seats.filter(
               (s) => s.status === 'selected'
             );
@@ -296,25 +441,13 @@ export class TheatresComponent implements OnInit {
           },
           error: (error) => {
             console.error('Error checking seat availability:', error);
-            // Fallback: all seats available
-            this.seats = [];
-            for (let i = 0; i < allSeatLabels.length; i++) {
-              const row = Math.floor(i / cols);
-              const col = (i % cols) + 1;
-              const label = allSeatLabels[i];
-              const id = i;
-
-              this.seats.push({
-                id,
-                label,
-                status: 'available',
-              });
-            }
-            this.selectedSeats = this.seats.filter(
-              (s) => s.status === 'selected'
-            );
-            this.errorMessage =
-              'Failed to load seat availability. All seats shown as available.';
+            // fallback: all seats available
+            this.seats = allSeatLabels.map((label, index) => ({
+              id: index,
+              label,
+              status: 'available',
+            }));
+            this.errorMessage = 'Failed to load seat availability.';
             this.isLoading = false;
           },
         });

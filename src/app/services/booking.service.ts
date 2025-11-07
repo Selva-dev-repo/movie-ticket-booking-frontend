@@ -268,6 +268,10 @@ export class BookingService {
       .pipe(catchError(this.handleError));
   }
 
+  // updateSeatStatusAfterCancel(seatNumber: string) {
+  //   return this.http.post(`${this.apiUrl}/update-seat-status`, { seatNumber });
+  // }
+
   showBookings(): Observable<DisplayBooking[]> {
     const userId = this.authService.getUserId();
     if (!isPlatformBrowser(this.platformId) || !userId) {

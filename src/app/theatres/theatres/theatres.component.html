@@ -5,21 +5,41 @@
   <div *ngIf="isLoading" class="loading">Loading theaters...</div>
   <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
 
+  <div class="search-container">
+    <input type="text" placeholder="Search theatres by name or location..." [(ngModel)]="searchTerm"
+      (input)="onSearch()" class="search-input" />
+  </div>
+
   <div *ngIf="role === 'Admin'" class="admin-actions"
-    [ngStyle]="{ marginTop: role ? '-52px' : '0px', position: 'relative' }">
+    [ngStyle]="{ marginTop: role ? '-90px' : '0px', position: 'relative' }">
     <button (click)="showAddTheatre()" class="add-theatre">
       <!-- {{ showAddForm ? 'Cancel' : 'Add New Theatre' }} -->
-        Add new theatre 
+      Add new theatre
     </button>
   </div>
 
-  <div *ngIf="!isLoading && !errorMessage && theaters.length > 0" class="theaters-grid">
+  <!-- <div *ngIf="!isLoading && !errorMessage && theaters.length > 0" class="theaters-grid">
     <div *ngFor="let theater of theaters" class="theater-card">
       <h3 class="theatre-name">{{ theater.theatreName }} - {{ theater.location }}</h3>
       <p class="screenno">Screen: {{ theater.screenNumber }}</p>
       <button class="booking" *ngIf="role !== 'Admin'" (click)="openSeatModal(theater)">Book Now</button>
+      <button class="booking" *ngIf="role === 'Admin'" (click)="openEditTheatre(theater)">Edit</button>
+    </div>
+  </div> -->
+
+  <div *ngIf="!isLoading && !errorMessage && filteredTheatres.length > 0" class="theaters-grid">
+    <div *ngFor="let theater of filteredTheatres" class="theater-card">
+      <h3 class="theatre-name">{{ theater.theatreName }} - {{ theater.location }}</h3>
+      <p class="screenno">Screen: {{ theater.screenNumber }}</p>
+      <button class="booking" *ngIf="role !== 'Admin'" (click)="openSeatModal(theater)">Book Now</button>
+      <button class="booking" *ngIf="role === 'Admin'" (click)="openEditTheatre(theater)">Edit</button>
     </div>
   </div>
+
+  <div *ngIf="!isLoading && !errorMessage && filteredTheatres.length === 0" class="no-results">
+    No theatres found
+  </div>
+
 
   <button (click)="backToDetails()" class="back-btn">Back to Movie Details</button>
 </div>
@@ -39,12 +59,8 @@
     <div class="date-selection">
       <h3>Select Date</h3>
       <div class="date-grid">
-        <div
-          *ngFor="let date of dates | slice:0:3"
-          class="date"
-          [class.selected]="selectedDate === date"
-          (click)="selectDate(date)"
-        >
+        <div *ngFor="let date of dates | slice:0:3" class="date" [class.selected]="selectedDate === date"
+          (click)="selectDate(date)">
           {{ date | date: 'dd/MM/yy' }}
         </div>
       </div>
@@ -54,12 +70,8 @@
     <div class="showtime-selection">
       <h3>Select Showtime</h3>
       <div class="showtime-grid">
-        <div
-          *ngFor="let time of showtimes"
-          class="showtime"
-          [class.selected]="selectedShowtime === time"
-          (click)="selectShowtime(time)"
-        >
+        <div *ngFor="let time of showtimes" class="showtime" [class.selected]="selectedShowtime === time"
+          (click)="selectShowtime(time)">
           {{ time }}
         </div>
       </div>
@@ -68,17 +80,21 @@
     <!-- Seat Map -->
     <div class="seat-selection">
       <h3>Select Seats</h3>
-      <div class="seat-map">
-        <div
-          *ngFor="let seat of seats"
-          class="seat"
-          [ngClass]="{
+      <!-- <div class="seat-map">
+        <div *ngFor="let seat of seats" class="seat" [ngClass]="{
             available: seat.status === 'available',
             selected: seat.status === 'selected',
             unavailable: seat.status === 'unavailable'
-          }"
-          (click)="toggleSeat(seat)"
-        >
+          }" (click)="toggleSeat(seat)">
+          {{ seat.label }}
+        </div>
+      </div> -->
+      <div class="seat-map">
+        <div *ngFor="let seat of seats" class="seat" [ngClass]="{
+              available: seat.status === 'available',
+              selected: seat.status === 'selected',
+              unavailable: seat.status === 'unavailable'
+            }" (click)="seat.status !== 'unavailable' && toggleSeat(seat)">
           {{ seat.label }}
         </div>
       </div>
@@ -88,22 +104,18 @@
       Total: ₹{{ totalAmount }} ({{ selectedSeats.length }} seats selected)
     </div>
 
-    <button
-      class="pay-btn"
-      [disabled]="!isPayNowEnabled()"
-      (click)="proceedToPayment()"
-    >
+    <button class="pay-btn" [disabled]="!isPayNowEnabled()" (click)="proceedToPayment()">
       Pay Now
     </button>
   </div>
 </div>
 
 <!-- Ticket booked successfully -->
- <div class="payment-modal" *ngIf="showModal" (click)="closePaymentModal()">
+<div class="payment-modal" *ngIf="showModal" (click)="closePaymentModal()">
   <div class="payment-modal-content" (click)="$event.stopPropagation()">
     <p>Payment done! You booked your tickets successfully.</p>
   </div>
- </div>
+</div>
 
 
 <!-- ✅ Add Theatre Form -->
@@ -128,6 +140,33 @@
 
       <button type="submit" class="submit">Add Theatre</button>
       <button type="button" (click)="closeTheatreModal()" class="cancel">Cancel</button>
+    </form>
+  </div>
+</div>
+
+<!-- 🧾 Edit Theatre Form -->
+<div *ngIf="showEditForm" class="add-theatre-modal" (click)="closeEditModal()">
+  <div class="modal-content-movie" (click)="$event.stopPropagation()">
+    <form (ngSubmit)="updateTheatre()">
+      <h2>Edit Theatre</h2>
+
+      <div class="form-group">
+        <input class="show-area" id="editTheatreName" [(ngModel)]="editTheatreData.theatreName" name="editTheatreName"
+          placeholder="Enter Theatre Name" required />
+      </div>
+
+      <div class="form-group">
+        <input class="show-area" id="editLocation" [(ngModel)]="editTheatreData.location" name="editLocation"
+          placeholder="Enter Location" required />
+      </div>
+
+      <div class="form-group">
+        <input class="show-area" id="editScreenNumber" [(ngModel)]="editTheatreData.screenNumber"
+          name="editScreenNumber" placeholder="Enter Screen Number" required />
+      </div>
+
+      <button type="submit" class="submit">Update Theatre</button>
+      <button type="button" (click)="closeEditModal()" class="cancel">Cancel</button>
     </form>
   </div>
 </div>

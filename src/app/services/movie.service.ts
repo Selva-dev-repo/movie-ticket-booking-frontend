@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
 export interface Movie {
   movieId: number;
@@ -23,7 +24,10 @@ export interface AddMovie {
 
 @Injectable({ providedIn: 'root' })
 export class MovieService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
   private apiUrl = 'http://localhost:8080/api';
 
   getMovies(): Observable<Movie[]> {
@@ -31,7 +35,10 @@ export class MovieService {
   }
 
   getMovieById(movieId: number): Observable<Movie> {
-    const token = localStorage.getItem('token');
+    let token: string | null =null;
+    if (isPlatformBrowser(this.platformId)) {
+      token = localStorage.getItem('token');
+    }
     if (!token) {
       return throwError(() => new Error('User not authenticated'));
     }

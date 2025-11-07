@@ -26,6 +26,8 @@ export class BookingsComponent implements OnInit {
   cancelModal: boolean = false;
   showConfirmModal: boolean = false;
   userName: string = '';
+  searchTerm: string = '';
+  filteredBookings: DisplayBooking[] = [];
   error: string | null = null;
 
   constructor(
@@ -51,6 +53,7 @@ export class BookingsComponent implements OnInit {
       next: (data) => {
         // console.log('Processed Bookings:', data);
         this.bookings = data;
+        this.filteredBookings = data;
         this.loading = false;
       },
       error: (err) => {
@@ -63,6 +66,22 @@ export class BookingsComponent implements OnInit {
       },
     });
   }
+
+  onSearch(): void {
+  const term = this.searchTerm.toLowerCase().trim();
+
+  if (!term) {
+    this.filteredBookings = this.bookings;
+    return;
+  }
+
+  this.filteredBookings = this.bookings.filter((booking) =>
+    booking.movieName?.toLowerCase().includes(term) ||
+    booking.theatreName?.toLowerCase().includes(term) ||
+    booking.location?.toLowerCase().includes(term)
+  );
+}
+
 
   openModal(bookingId: number): void {
     this.showModal = true;
@@ -130,7 +149,7 @@ export class BookingsComponent implements OnInit {
         ) {
           this.selectedBooking.bookingStatus = 'Cancelled';
         }
-
+        // this.bookingService.updateSeatStatusAfterCancel(this.selectedBooking.seatNumber).subscribe();
         this.loading = false;
         this.cancelModal = true;
         setTimeout(() => {
@@ -152,12 +171,11 @@ export class BookingsComponent implements OnInit {
   }
 
   isPastShow(showDate: string, showTime: string): boolean {
-  if (!showDate || !showTime) return false;
-  const showDateTime = new Date(`${showDate}T${showTime}`);
-  const now = new Date();
-  return showDateTime < now;
-}
-
+    if (!showDate || !showTime) return false;
+    const showDateTime = new Date(`${showDate}T${showTime}`);
+    const now = new Date();
+    return showDateTime < now;
+  }
 
   logout(): void {
     this.bookings = [];

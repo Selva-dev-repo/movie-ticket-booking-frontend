@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
       // this.loggedIn = !!localStorage.getItem('token');
       this.loggedIn = !!localStorage.getItem('token');
       this.userRole = this.authService.getRole();
-      console.log('Logged in as:', this.userRole);
+      // console.log('Logged in as:', this.userRole);
     }
 
     this.router.events.subscribe(() => {

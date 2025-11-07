@@ -10,8 +10,13 @@
   <!-- No bookings state -->
   <div *ngIf="loading && !error && bookings.length === 0" class="no-bookings">No bookings found</div>
 
+  <div class="search-container">
+    <input type="text" placeholder="Search by movie or theatre name and location..." [(ngModel)]="searchTerm"
+      (input)="onSearch()" class="search-input" />
+  </div>
+
   <!-- Bookings list -->
-  <div *ngIf="!loading && !error && bookings.length > 0">
+  <!-- <div *ngIf="!loading && !error && bookings.length > 0">
     <ul style="list-style: none; padding: 0;">
       <li *ngFor="let booking of bookings; let i = index" [attr.data-booking-id]="booking.bookingId">
         <div class="all-bookings" (click)="openModal(booking.bookingId)">
@@ -30,6 +35,45 @@
         </div>
       </li>
     </ul>
+  </div> -->
+
+  <div *ngIf="!loading && !error && filteredBookings.length > 0">
+    <ul style="list-style: none; padding: 0;">
+      <li *ngFor="let booking of filteredBookings; let i = index" [attr.data-booking-id]="booking.bookingId">
+        <div class="all-bookings" (click)="openModal(booking.bookingId)">
+          <p>
+            <strong>Movie:</strong>
+            <span class="movie-title">{{ booking.movieName || 'N/A' }}</span> -
+            {{ booking.duration || 'N/A' }} min
+          </p>
+          <p>
+            <strong>Theatre:</strong>
+            {{ booking.theatreName || 'N/A' }} - {{ booking.location || 'N/A' }}
+          </p>
+          <p>
+            <strong>Show Time:</strong>
+            {{ booking.showDate }} / {{ booking.showTime || 'N/A' }}
+          </p>
+          <p><strong>Screen:</strong> {{ booking.screenNumber || 'N/A' }}</p>
+          <p><strong>Seats:</strong> {{ booking.seatNumber || 'N/A' }}</p>
+          <p><strong>Amount:</strong> ₹{{ booking.amount || 'N/A' }}</p>
+          <p>
+            <strong>Booking Status:</strong>
+            <span [ngClass]="{
+              'status-confirmed': booking.bookingStatus === 'Confirmed',
+              'status-pending': booking.bookingStatus === 'Pending',
+              'status-cancelled': booking.bookingStatus === 'Cancelled'
+            }">
+              {{ booking.bookingStatus || 'N/A' }}
+            </span>
+          </p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="!loading && !error && filteredBookings.length === 0">
+    <p style="text-align: center; color: gray;">No bookings found</p>
   </div>
 
   <!-- View Ticket Modal -->
@@ -59,7 +103,8 @@
           Cancel Ticket
         </button>
 
-        <span class="finished-label" *ngIf="isPastShow(selectedBooking.showDate, selectedBooking.showTime) && selectedBooking.bookingStatus !== 'Cancelled'">
+        <span class="finished-label"
+          *ngIf="isPastShow(selectedBooking.showDate, selectedBooking.showTime) && selectedBooking.bookingStatus !== 'Cancelled'">
           <span>&#10003; </span>Completed
         </span>
 
