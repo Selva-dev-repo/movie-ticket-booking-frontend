@@ -35,10 +35,11 @@ export class MovieService {
   }
 
   getMovieById(movieId: number): Observable<Movie> {
-    let token: string | null =null;
     if (isPlatformBrowser(this.platformId)) {
-      token = localStorage.getItem('token');
+      return throwError(() => new Error('User not authenticated or not in browser environment'));
     }
+
+    const token = localStorage.getItem('token');
     if (!token) {
       return throwError(() => new Error('User not authenticated'));
     }

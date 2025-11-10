@@ -112,6 +112,10 @@ export class BookingService {
       return throwError(() => new Error('User not authenticated'));
     }
 
+    if (!isPlatformBrowser(this.platformId)) {
+      return throwError(() => new Error('User not authenticated or not in browser environment'));
+    }
+
     const token = localStorage.getItem('token');
     if (!token) {
       return throwError(() => new Error('User not authenticated'));
