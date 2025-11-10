@@ -60,6 +60,7 @@
 
 .navbar-menu a.active {
   color: #000a98;
+  text-decoration: underline;
   font-weight: bolder;
 }
 

@@ -151,6 +151,14 @@
   gap: 10px;
 }
 
+.showtime.disabled {
+  background-color: #bdbdbd;
+  color: #757575;
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
 .date, .showtime {
   width: 80px;
   height: 40px;

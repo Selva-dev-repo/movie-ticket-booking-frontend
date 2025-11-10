@@ -36,7 +36,7 @@ export class TheatresComponent implements OnInit {
   selectedTheater: Theatre | null = null;
   dates: string[] = [];
   selectedDate: string = '';
-  showtimes: string[] = ['06:00', '10:00', '14:30', '18:00', '21:00'];
+  showtimes: string[] = ['06:00', '09:30', '13:00', '16:30', '20:00', '23:30'];
   selectedShowtime: string = '';
   seats: Seat[] = [];
   selectedSeats: Seat[] = [];
@@ -260,7 +260,7 @@ export class TheatresComponent implements OnInit {
 
   generateDates(): void {
     const today = new Date();
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 7; i++) {
       const date = new Date(today);
       date.setDate(today.getDate() + i);
       const formattedDate = date.toISOString().split('T')[0];
@@ -270,6 +270,7 @@ export class TheatresComponent implements OnInit {
 
   selectDate(date: string): void {
     this.selectedDate = date;
+    this.selectedShowtime = '';
     this.onSelectionChange();
   }
 
@@ -277,6 +278,32 @@ export class TheatresComponent implements OnInit {
     this.selectedShowtime = time;
     this.onSelectionChange();
   }
+
+  isPastShow(time: string): boolean {
+  if (!this.selectedDate) return false;
+
+  const selected = new Date(this.selectedDate);
+  const now = new Date();
+
+  // Check if selected date is today
+  const isToday =
+    selected.getFullYear() === now.getFullYear() &&
+    selected.getMonth() === now.getMonth() &&
+    selected.getDate() === now.getDate();
+
+  if (!isToday) return false; // future dates are always active
+
+  // Parse "HH:mm" format
+  const [hours, minutes] = time.split(':').map(Number);
+  const showTime = new Date(selected);
+  showTime.setHours(hours, minutes, 0, 0);
+
+  const cutoffTime = new Date(showTime.getTime() - 15 * 60 * 1000);
+
+  // If the showtime is before or equal to now → grey it out
+  return now.getTime() >= cutoffTime.getTime();
+  // return showTime.getTime() <= now.getTime();
+}
 
   onSelectionChange(): void {
     if (
@@ -294,97 +321,6 @@ export class TheatresComponent implements OnInit {
       this.isLoading = false;
     }
   }
-
-  // generateSeatMap() {
-  //   const rows = 5;
-  //   const cols = 4;
-  //   const allSeatLabels = [
-  //     'A1',
-  //     'A2',
-  //     'A3',
-  //     'A4',
-  //     'B1',
-  //     'B2',
-  //     'B3',
-  //     'B4',
-  //     'C1',
-  //     'C2',
-  //     'C3',
-  //     'C4',
-  //     'D1',
-  //     'D2',
-  //     'D3',
-  //     'D4',
-  //     'E1',
-  //     'E2',
-  //     'E3',
-  //     'E4',
-  //   ];
-
-  //   if (
-  //     this.movieId &&
-  //     this.selectedTheater?.theatreId &&
-  //     this.selectedDate &&
-  //     this.selectedShowtime
-  //   ) {
-  //     this.bookingService
-  //       .checkSeatAvailability(
-  //         allSeatLabels,
-  //         this.selectedTheater.theatreId,
-  //         this.movieId,
-  //         this.selectedDate,
-  //         this.selectedShowtime
-  //       )
-  //       .subscribe({
-  //         next: (availability: boolean[]) => {
-  //           this.seats = [];
-  //           for (let i = 0; i < allSeatLabels.length; i++) {
-  //             const row = Math.floor(i / cols);
-  //             const col = (i % cols) + 1;
-  //             const label = allSeatLabels[i];
-  //             const id = i;
-
-  //             this.seats.push({
-  //               id,
-  //               label,
-  //               status: availability[i] ? 'available' : 'unavailable',
-  //             });
-  //           }
-  //           this.selectedSeats = this.seats.filter(
-  //             (s) => s.status === 'selected'
-  //           );
-  //           this.isLoading = false;
-  //         },
-  //         error: (error) => {
-  //           console.error('Error checking seat availability:', error);
-  //           // Fallback: all seats available
-  //           this.seats = [];
-  //           for (let i = 0; i < allSeatLabels.length; i++) {
-  //             const row = Math.floor(i / cols);
-  //             const col = (i % cols) + 1;
-  //             const label = allSeatLabels[i];
-  //             const id = i;
-
-  //             this.seats.push({
-  //               id,
-  //               label,
-  //               status: 'available',
-  //             });
-  //           }
-  //           this.selectedSeats = this.seats.filter(
-  //             (s) => s.status === 'selected'
-  //           );
-  //           this.errorMessage =
-  //             'Failed to load seat availability. All seats shown as available.';
-  //           this.isLoading = false;
-  //         },
-  //       });
-  //   } else {
-  //     this.seats = [];
-  //     this.selectedSeats = [];
-  //     this.isLoading = false;
-  //   }
-  // }
 
   generateSeatMap() {
     const allSeatLabels = [

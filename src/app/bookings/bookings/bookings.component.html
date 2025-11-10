@@ -16,27 +16,6 @@
   </div>
 
   <!-- Bookings list -->
-  <!-- <div *ngIf="!loading && !error && bookings.length > 0">
-    <ul style="list-style: none; padding: 0;">
-      <li *ngFor="let booking of bookings; let i = index" [attr.data-booking-id]="booking.bookingId">
-        <div class="all-bookings" (click)="openModal(booking.bookingId)">
-          <p><strong>Movie:</strong> <span class="movie-title"> {{ booking.movieName || 'N/A' }}</span> - {{
-            booking.duration || 'N/A' }} min</p>
-          <p><strong>Theatre:</strong> {{ booking.theatreName || 'N/A' }} - {{ booking.location || 'N/A' }}</p>
-          <p><strong>Show Time:</strong> {{ booking.showDate }} / {{ booking.showTime || 'N/A' }}</p>
-          <p><strong>Screen:</strong> {{ booking.screenNumber || 'N/A' }}</p>
-          <p><strong>Seats:</strong> {{ booking.seatNumber || 'N/A' }}</p>
-          <p><strong>Amount:</strong> ₹{{ booking.amount || 'N/A' }}</p>
-          <p><strong>Booking Status:</strong> <span [ngClass]="{
-            'status-confirmed': booking.bookingStatus === 'Confirmed',
-            'status-pending': booking.bookingStatus === 'Pending',
-            'status-cancelled': booking.bookingStatus === 'Cancelled'
-          }"> {{ booking.bookingStatus || 'N/A' }}</span></p>
-        </div>
-      </li>
-    </ul>
-  </div> -->
-
   <div *ngIf="!loading && !error && filteredBookings.length > 0">
     <ul style="list-style: none; padding: 0;">
       <li *ngFor="let booking of filteredBookings; let i = index" [attr.data-booking-id]="booking.bookingId">
@@ -92,10 +71,6 @@
         <p><strong>Seats:</strong> {{ selectedBooking.seatNumber }}</p>
         <p><strong>Amount:</strong> ₹{{ selectedBooking.amount }} </p>
         <p><strong>Booking Status: </strong> {{ selectedBooking.bookingStatus }} </p>
-        <!-- <button class="cancel-ticket" *ngIf="selectedBooking.bookingStatus !== 'Cancelled'"
-          (click)="openConfirmModal(selectedBooking.bookingId)">
-          Cancel Ticket
-        </button> -->
 
         <button class="cancel-ticket"
           *ngIf="!isPastShow(selectedBooking.showDate, selectedBooking.showTime) && selectedBooking.bookingStatus !== 'Cancelled'"
