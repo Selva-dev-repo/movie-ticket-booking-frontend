@@ -51,9 +51,12 @@ export class BookingsComponent implements OnInit {
     this.loading = true;
     this.bookingService.showBookings().subscribe({
       next: (data) => {
-        // console.log('Processed Bookings:', data);
-        this.bookings = data;
-        this.filteredBookings = data;
+        this.bookings = data.sort((a, b) => {
+          const dateA = new Date(`${a.showDate}T${a.showTime}`);
+          const dateB = new Date(`${b.showDate}T${b.showTime}`);
+          return dateB.getTime() - dateA.getTime();
+        });
+        this.filteredBookings = [...this.bookings];
         this.loading = false;
       },
       error: (err) => {

@@ -87,16 +87,16 @@ export class TheatresComponent implements OnInit {
   }
 
   private fetchMovieDetails(movieId: number, movieName: string): void {
-    this.movieService.getMovieById(movieId).subscribe({
-      next: (movie: Movie) => {
-        this.movieName = movieName;
-      },
-      error: (error: any) => {
-        console.error('Error fetching movie details:', error);
-        this.movieName = 'Unknown Movie';
-      },
-    });
-  }
+  this.movieService.getMovieById(movieId).subscribe({
+    next: (movie: Movie) => {
+      this.movieName = movie.movieTitle || movieName || 'Unknown Movie';
+    },
+    error: (error: any) => {
+      console.error('Error fetching movie details:', error);
+      this.movieName = movieName || 'Unknown Movie';
+    },
+  });
+}
 
   private fetchAllTheatres(): void {
     this.isLoading = true;

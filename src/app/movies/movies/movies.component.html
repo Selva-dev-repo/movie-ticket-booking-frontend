@@ -1,8 +1,10 @@
 <!-- Movies list -->
 <div class="released-movies">
   <h2 class="section-title">Released Movies</h2>
-  <div class="add-movie-btn" [ngStyle]="{ marginTop: isAdmin ? '-72px' : '0px', position: 'relative' }">
-    <button *ngIf="isAdmin" class="add-btn" (click)="openAddMovieModal()">Add new movie</button>
+  <div class="add-movie-btn" [ngStyle]="{ marginTop: isAdmin ? '-22px' : '6%', position: 'relative' }">
+    <div class="add-movie">
+      <button *ngIf="isAdmin" class="add-btn" (click)="openAddMovieModal()">Add new movie</button>
+    </div>
   </div>
 
   <div *ngIf="loading" class="loading">Fetching movies, please wait...</div>
@@ -20,7 +22,6 @@
 
   <div class="movies-grid" *ngIf="!loading && !error && filteredMovies.length > 0">
     <div class="movie-card" *ngFor="let movie of filteredMovies" (click)="showMovieDetails(movie)">
-      <!-- <img src="../../../assets/images/CinemaTicketPoster.jpg" alt="{{ movie.movieTitle }} Poster" width="20px" height="20px" class="movie-poster"/> -->
       <img [src]="movie.poster" alt="{{ movie.movieTitle }}" class="movie-poster">
       <div class="movie-title"><span style="text-transform: uppercase;">{{ movie.movieTitle }}</span> -
         {{movie.duration}} mins</div>

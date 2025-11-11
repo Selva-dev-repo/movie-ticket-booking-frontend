@@ -15,7 +15,7 @@
 }
 
 .search-container {
-  /* margin-top: 20px; */
+  margin-top: -65px;
   padding: 2px 0px 20px 0px;
 }
 
@@ -29,6 +29,12 @@
 .add-movie-btn {
   text-align: right;
   margin-bottom: 1rem;
+}
+
+.add-movie {
+  display: flex;
+  justify-content: right; 
+  margin-left: 80%;
 }
 
 .add-btn {
@@ -135,7 +141,7 @@
 
 .modal-content-movie {
   background: rgb(235, 230, 230);
-  padding: 20px;
+  padding: 5px 5px 25px 5px;
   border-radius: 8px;
   text-align: center;
   max-width: 400px;
