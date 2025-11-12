@@ -50,13 +50,22 @@
   margin-top: 20px;
   width: 60%;
   height: 70%;
+  border-radius: 10px;
   object-fit: cover;
+}
+
+.movie-modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .modal-movie-poster {
   margin-top: -10px;
   width: 50%;
   height: 10%;
+  border-radius: 15px;
   object-fit: cover;
 }
 
@@ -144,10 +153,11 @@
 
 .modal-content {
   background-color: rgb(215, 248, 177);
-  padding: 20px;
+  padding: 30px 10px 10px 10px;
   border-radius: 15px;
   width: 26%;
   max-width: 500px;
+  animation: fadeIn 3s ease-out;
   position: relative;
 }
 
@@ -203,4 +213,13 @@
 .status-cancelled {
   color: #f44336;
   font-weight: bold;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

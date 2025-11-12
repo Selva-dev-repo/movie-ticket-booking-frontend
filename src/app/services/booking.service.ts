@@ -113,7 +113,9 @@ export class BookingService {
     }
 
     if (!isPlatformBrowser(this.platformId)) {
-      return throwError(() => new Error('User not authenticated or not in browser environment'));
+      return throwError(
+        () => new Error('User not authenticated or not in browser environment')
+      );
     }
 
     const token = localStorage.getItem('token');
@@ -149,7 +151,7 @@ export class BookingService {
       );
     }
 
-    const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token');
     if (!token) {
       return throwError(() => new Error('User not authenticated'));
     }
@@ -170,7 +172,7 @@ export class BookingService {
         tap(() => console.log(`Booking ${bookingId} cancelled successfully`)),
         catchError(this.handleError)
       );
-  }
+}
 
   saveBooking(booking: SaveBooking): Observable<Booking> {
     if (!isPlatformBrowser(this.platformId)) {
@@ -278,18 +280,23 @@ export class BookingService {
 
   showBookings(): Observable<DisplayBooking[]> {
     const userId = this.authService.getUserId();
+
     if (!isPlatformBrowser(this.platformId) || !userId) {
-      return throwError(
-        () => new Error('User not authenticated or not in browser environment')
-      );
+      return of([]);
     }
-    const token = localStorage.getItem('token');
+
+    const token = isPlatformBrowser(this.platformId)
+      ? localStorage.getItem('token')
+      : null;
+
     if (!userId || !token) {
-      return throwError(() => new Error('User not authenticated'));
+      return of([]);
     }
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
+
     return this.http
       .get<Booking[]>(`${this.apiUrl}/user/${userId}`, { headers })
       .pipe(

@@ -108,6 +108,7 @@
   border-radius: 15px;
   width: 26%;
   max-width: 500px;
+  animation: fadeIn 2s ease-out;
   position: relative;
 }
 
@@ -165,7 +166,7 @@
 
 .cancel-modal-content {
   width: 50%;
-  background-color: rgb(238, 255, 205);
+  background-color: rgb(195, 196, 255);
   padding: 10px;
   gap: 20px;
 }
@@ -209,4 +210,13 @@
   width: 25%;
   font-size: larger;
   position: relative;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

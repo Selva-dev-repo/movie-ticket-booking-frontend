@@ -120,11 +120,12 @@ footer {
 }
 
 .modal-content {
-  background-color: white;
+  background-color: rgb(253, 246, 223);
   padding: 0px 30px 20px 10px;
-  border-radius: 5px;
+  border-radius: 15px;
   width: 90%;
   max-width: 500px;
+  animation: fadeIn 1s ease-in;
   position: relative;
 }
 
@@ -148,8 +149,9 @@ footer {
 .form-group input {
   width: 100%;
   padding: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #818181;
   border-radius: 4px;
+  background-color: rgb(253, 246, 223);
 }
 
 .form-actions {
@@ -173,22 +175,11 @@ footer {
   color: white;
 }
 
-/* button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
-
-button[type="submit"] {
-  
-}
-
-button[type="submit"]:disabled {
-  background-color: #6c757d;
-  cursor: not-allowed;
-}
-
-button[type="button"] {
-  
-} */
